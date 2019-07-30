@@ -1,20 +1,21 @@
-print('test')
-
 from textacy.preprocess import preprocess_text
-from Database.dbMongo import Database
+# from Database.dbMongo import Database
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 import id_beritagar as indo
 import requests
 import id_aldo
+import sys
 
+sys.path.insert(0, '/home/lumierra/smart_news/Database/')
+import dbMongo
 
 ## Load NLP
 nlp = id_aldo.load()
 nlp_ner = indo.load()
 
 ## Load Database Mongo
-DB = Database()
+DB = dbMongo.Database()
 
 ## Load Stopword For NLP
 stopwords = requests.get("https://raw.githubusercontent.com/masdevid/ID-Stopwords/master/id.stopwords.02.01.2016.txt").text.split("\n")
@@ -236,6 +237,3 @@ class tempoScrapper():
         iData = self.cleanContent(iData)
 
         return iData
-
-test = tempoScrapper()
-test.tempoDaily('tekno', 'tekno',2019, 7, 30)
