@@ -146,7 +146,7 @@ class liputanScraper():
     def getContent2(self, iData=None):
         for i in tqdm(range(len(iData)), desc='Get Content'):
             try:
-                iTemp = self.get_content(iData[i]['url'])
+                iTemp = self.getContent(iData[i]['url'])
                 iData[i]['content'] = iTemp['content']
                 iData[i]['img'] = iTemp['img']
                 iData[i]['content_html'] = iTemp['content_html']
@@ -264,11 +264,11 @@ class liputanScraper():
 
                 if title[:6] != 'VIDEO:' and title[:5] != 'FOTO:' and title[:6] != 'FOTO :' and title[:5] != 'Top 3' and title[:4] != 'Top3':
                     url = contents[y].select_one('.articles--rows--item__title > a')['href']
-                    category = url.split('/')[3]
+                    category = iUrl.split('/')[3]
                     subCategory = contents[y].select_one('.articles--rows--item__category').text
                     title = contents[y].select_one('.articles--rows--item__title').text
                     description = contents[y].select_one('.articles--rows--item__summary').text
-                    date = url.split('/')[7].split('?')[0] + '-' + url.split('/')[6] + '-' + url.split('/')[5]
+                    date = iUrl.split('/')[7].split('?')[0] + '-' + iUrl.split('/')[6] + '-' + iUrl.split('/')[5]
 
                     iJson = {
                         "category": nameCategory,
@@ -296,7 +296,7 @@ class liputanScraper():
         return iData
 
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara perhari
-    def get_dataHarian(self, category=None, nameCategory=None, year=None, month=None, day=None):
+    def iDaily(self, category=None, nameCategory=None, year=None, month=None, day=None):
         iData = self.liputanDaily(category, nameCategory, year, month, day)
         iData = self.getContent2((iData))
         iData = self.cleanData(iData)
@@ -305,7 +305,7 @@ class liputanScraper():
         return iData
 
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara perhari
-    def get_dataBulanan(self, category=None, nameCategory=None, year=None, month=None):
+    def iMonthly(self, category=None, nameCategory=None, year=None, month=None):
         iData = self.liputanMonthly(category, nameCategory, year, month)
         iData = self.getContent2((iData))
         iData = self.cleanData(iData)
