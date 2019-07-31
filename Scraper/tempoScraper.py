@@ -154,6 +154,7 @@ class tempoScrapper():
 
         return iData
 
+    ## fungsi ini digunakan untuk membersihkan konten di dalam artikel berita
     def cleanContent(self, iData=None):
         for i in tqdm(range(len(iData)), desc='Clean Content'):
             text_stopword = []
@@ -174,7 +175,6 @@ class tempoScrapper():
                 iResult.append(data)
 
         return iResult
-
 
     ## fungsi ini digunakan untuk mengambil sumber data dari Tempo.co
     def tempoDaily(self, category=None, nameCategory=None, year=None, month=None, day=None):
@@ -227,7 +227,6 @@ class tempoScrapper():
             iData.append(iJson)
 
         return iData
-
 
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita
     def iDaily(self, category=None, nameCategory=None, year=None, month=None, day=None):
