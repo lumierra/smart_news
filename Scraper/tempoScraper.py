@@ -84,11 +84,11 @@ class tempoScrapper():
                 data.append(u)
 
             for d in data:
-                text = text.replace(d['text'],'''<mark class="{label}-{_id} font-mark transparent style-{label}"> {text} </mark>'''.format(_id=iData[i]['_id'], label=d['label'], text=d['text']))
-            text = ''.join(('''<div class="entities"> ''', text, ' </div>'))
-            text = text.split('\n')
+                iText = iText.replace(d['text'],'''<mark class="{label}-{_id} font-mark transparent style-{label}"> {text} </mark>'''.format(_id=iData[i]['_id'], label=d['label'], text=d['text']))
+            iText = ''.join(('''<div class="entities"> ''', iText, ' </div>'))
+            iText = iText.split('\n')
 
-            iData[i]['nerContent'] = text
+            iData[i]['nerContent'] = iText
 
         return iData
 
@@ -123,7 +123,7 @@ class tempoScrapper():
             if content.text.strip()[:10] != 'Baca juga:' and content.text.strip()[:5] != 'Baca:':
                 iData.append(content.text.strip() + '\n\n')
 
-        ordinaryContent = ''.join(iSoup)
+        ordinaryContent = ''.join(iData)
         ordinaryContent= preprocess_text(ordinaryContent, fix_unicode=True)
         ordinaryContent = self.nerText(ordinaryContent)
         htmlContent = ''.join(iData)

@@ -26,7 +26,7 @@ list_name_category_tempo = ['tekno']
 
 
 #delete data from mongoDB
-# DB.delete_dataDaily(iDatabase, iCollection, iSource)
+DB.delete_dataDaily(iDatabase, iCollection, iSource)
 
 # Get Data
 for category, nameCategory in zip(list_category_tempo, list_name_category_tempo):
@@ -36,12 +36,11 @@ for category, nameCategory in zip(list_category_tempo, list_name_category_tempo)
     for i in range(len(iData)):
         iAttr.append(iData[i])
 
-print(iAttr[0])
-    # DB.insertData(iDatabase, iCollection, iAttr)
+    DB.insertData(iDatabase, iCollection, iAttr)
 
-# iQuery = scraperTempo.getNER(iDatabase, iCollection, iSource)
-# iData = []
-# for q in iQuery:
-#     iData.append(q)
-# DB.delete_dataDaily(iDatabase, iCollection, iSource)
-# DB.insertData(iDatabase, iCollection, iData)
+iQuery = scraperTempo.getNER(iDatabase, iCollection, iSource)
+iData = []
+for q in iQuery:
+    iData.append(q)
+DB.delete_dataDaily(iDatabase, iCollection, iSource)
+DB.insertData(iDatabase, iCollection, iData)
