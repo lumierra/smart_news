@@ -149,7 +149,7 @@ class liputanScraper():
                 iTemp = self.getContent(iData[i]['url'])
                 iData[i]['content'] = iTemp['content']
                 iData[i]['img'] = iTemp['img']
-                iData[i]['content_html'] = iTemp['content_html']
+                iData[i]['contentHTML'] = iTemp['contentHTML']
             except:
                 pass
 
@@ -168,12 +168,12 @@ class liputanScraper():
     def cleanContent(self, iData=None):
         for i in tqdm(range(len(iData)), desc='Clean Content'):
             iStopword = []
-            iData[i]['clean_content'] = preprocess_text(iData[i]['content'], lowercase=True, fix_unicode=True,no_punct=True)
-            clean_content = iData[i]['clean_content'].split()
+            iData[i]['cleanContent'] = preprocess_text(iData[i]['content'], lowercase=True, fix_unicode=True,no_punct=True)
+            cleanContent = iData[i]['cleanContent'].split()
 
-            [iStopword.append(cc) for cc in clean_content if cc not in stopwords]
+            [iStopword.append(cc) for cc in cleanContent if cc not in stopwords]
 
-            iData[i]['clean_content'] = ' '.join(iStopword)
+            iData[i]['cleanContent'] = ' '.join(iStopword)
 
         return iData
 
@@ -276,6 +276,7 @@ class liputanScraper():
                         "description": description,
                         "url": url,
                         "content": '',
+                        "contentHTML": '',
                         "img": '',
                         "subCategory": subCategory,
                         "publishedAt": date,
