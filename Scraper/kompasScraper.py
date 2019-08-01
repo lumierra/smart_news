@@ -155,7 +155,7 @@ class kompasScraper():
             try:
                 iTemp = self.getContent(iData[i]['url'])
                 iData[i]['content'] = iTemp['content']
-                iData[i]['content_html'] = iTemp['content_html']
+                iData[i]['contentHTML'] = iTemp['contentHTML']
                 iData[i]['img'] = iTemp['img']
                 iData[i]['description'] = iData[i]['title'] + ' ' + iData[i]['content'][:255] + '....'
             except:
