@@ -8,5 +8,6 @@ database :
     port : 3306
   mongo :
     host : '127.0.0.1'
-    database : 'iData'
+    database : 'iStorage'
+    collection : 'iData'
     port : 27017

@@ -21,8 +21,8 @@ iSource = 'tempo.co'
 # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif']
 # list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif']
 
-list_category_tempo = ['tekno', ]
-list_name_category_tempo = ['tekno']
+list_category_tempo = ['nasional', 'bisnis','bola','seleb','tekno','otomotif']
+list_name_category_tempo = ['news', 'bisnis','sports','entertainment','tekno','otomotif']
 
 
 #delete data from mongoDB

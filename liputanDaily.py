@@ -21,8 +21,8 @@ iSource = 'liputan6.com'
 # list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif']
 # list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif']
 
-list_category_tempo = ['tekno', ]
-list_name_category_tempo = ['tekno']
+list_category_tempo = ['bola', ]
+list_name_category_tempo = ['sports']
 
 
 #delete data from mongoDB

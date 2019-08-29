@@ -17,6 +17,7 @@ class Database():
     def __init__(self):
         self.host = config['database']['mongo']['host']
         self.database = config['database']['mongo']['database']
+        self.collection = config['database']['mongo']['collection']
         self.port = config['database']['mongo']['port']
         self.config = config
         self.day = now.day
