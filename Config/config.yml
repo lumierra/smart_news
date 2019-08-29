@@ -10,4 +10,5 @@ database :
     host : '127.0.0.1'
     database : 'iStorage'
     collection : 'iData'
+    entity : 'topEntity'
     port : 27017

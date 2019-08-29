@@ -1,4 +1,3 @@
-
 from pymongo.errors import ServerSelectionTimeoutError
 from Scraper.liputanScraper import liputanScraper
 from Database.dbMongo import Database
@@ -26,19 +25,19 @@ class Liputan():
         self.database = config['database']['mongo']['database']
         self.collection = config['database']['mongo']['collection']
         self.port = config['database']['mongo']['port']
-        self.iSource = 'liputan.com'
+        self.iSource = 'liputan6.com'
         self.config = config
         self.day = now.day
         self.month = now.month
         self.year = now.year
 
     def execute(self):
-        ## list category and name category from Tempo.co
-        list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif']
-        list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif']
+        ## list category and name category from Liputan6
+        # list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif']
+        # list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif']
 
-        # list_category_liputan = ['bola', ]
-        # list_name_category_liputan = ['sports']
+        list_category_liputan = ['health', ]
+        list_name_category_liputan = ['health']
 
         #delete data from mongoDB
         DB.delete_dataDaily(self.database, self.collection, self.iSource)
@@ -47,11 +46,11 @@ class Liputan():
         for category, nameCategory in zip(list_category_liputan, list_name_category_liputan):
             iData = scraperLiputan.iDaily(category, nameCategory, self.year, self.month, self.day)
 
-        iAttr = []
-        for i in range(len(iData)):
-            iAttr.append(iData[i])
+            iAttr = []
+            for i in range(len(iData)):
+                iAttr.append(iData[i])
 
-        DB.insertData(self.database, self.collection, iAttr)
+            DB.insertData(self.database, self.collection, iAttr)
 
         iQuery = scraperLiputan.getNER(self.database, self.collection, self.iSource)
         iData = []

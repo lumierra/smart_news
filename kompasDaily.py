@@ -46,11 +46,11 @@ class Kompas():
         for category, nameCategory in zip(list_category_kompas, list_name_category_kompas):
             iData = scraperKompas.iDaily(category, nameCategory, self.year, self.month, self.day)
 
-        iAttr = []
-        for i in range(len(iData)):
-            iAttr.append(iData[i])
+            iAttr = []
+            for i in range(len(iData)):
+                iAttr.append(iData[i])
 
-        DB.insertData(self.database, self.collection, iAttr)
+            DB.insertData(self.database, self.collection, iAttr)
 
         iQuery = scraperKompas.getNER(self.database, self.collection, self.iSource)
         iData = []
