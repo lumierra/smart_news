@@ -32,18 +32,18 @@ class Kompas():
         self.year = now.year
 
     def execute(self):
-        ## list category and name category from Tempo.co
-        # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif']
-        # list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif']
+        ## list category and name category from Kompas.com
+        list_category_kompas = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif']
+        list_name_category_kompas = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif']
 
-        list_category_tempo = ['tekno', ]
-        list_name_category_tempo = ['tekno']
+        # list_category_kompas = ['tekno', ]
+        # list_name_category_kompas = ['tekno']
 
         #delete data from mongoDB
         DB.delete_dataDaily(self.database, self.collection, self.iSource)
 
         # Get Data
-        for category, nameCategory in zip(list_category_tempo, list_name_category_tempo):
+        for category, nameCategory in zip(list_category_kompas, list_name_category_kompas):
             iData = scraperKompas.iDaily(category, nameCategory, self.year, self.month, self.day)
 
         iAttr = []
