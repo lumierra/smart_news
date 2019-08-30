@@ -27,17 +27,18 @@ class Tempo():
         self.port = config['database']['mongo']['port']
         self.iSource = 'tempo.co'
         self.config = config
-        self.day = now.day
-        self.month = now.month
+        # self.day = 6
+        self.day = config['database']['mongo']['day']
+        self.month = 1
         self.year = now.year
 
     def execute(self):
         ## list category and name category from Tempo.co
-        # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
-        # list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+        list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
+        list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-        list_category_tempo = ['gaya', 'tekno', 'otomotif']
-        list_name_category_tempo = ['health', 'tekno', 'otomotif']
+        # list_category_tempo = ['gaya']
+        # list_name_category_tempo = ['health']
 
         #delete data from mongoDB
         DB.delete_dataDaily(self.database, self.collection, self.iSource)

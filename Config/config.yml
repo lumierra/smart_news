@@ -12,3 +12,4 @@ database :
     collection : 'iData'
     entity : 'topEntity'
     port : 27017
+    day : 31

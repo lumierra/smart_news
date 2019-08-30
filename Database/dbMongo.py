@@ -20,8 +20,9 @@ class Database():
         self.collection = config['database']['mongo']['collection']
         self.port = config['database']['mongo']['port']
         self.config = config
-        self.day = now.day
-        self.month = now.month
+        # self.day = 6
+        self.day = config['database']['mongo']['day']
+        self.month = 1
         self.year = now.year
 
     ## fungsi untuk mengecek koneksi mongoDB
