@@ -28,7 +28,7 @@ class Entity(object):
         self.config = config
         self.day = now.day
         self.month = now.month
-        self.year = 2019
+        self.year = now.year
 
     ## insert top entitas ke database topEntity
     def insertTopEntity(self, database=None, collection=None, attr=None):
@@ -49,7 +49,7 @@ class Entity(object):
         myCollection = myDB["{}".format(collection)]
 
         iQuery = myCollection.find({
-            'publishedAt': '{}-0{}-{}'.format(day,month,year)
+            'publishedAt': '{}-0{}-{}'.format(self.day, self.month, self.year)
         })
         iData = []
         for q in iQuery:
@@ -68,33 +68,6 @@ class Entity(object):
         })
 
         return iQuery
-
-    ## delete data top entitas
-    # def deleteDataDaily(self, database=None, collection=None):
-    #     myClient = pymongo.MongoClient("mongodb://{}:{}".format(self.host, self.port))
-    #     myDB = myClient["{}".format(database)]
-    #     myCollection = myDB["{}".format(collection)]
-
-    #     if self.month <= 9:
-    #         if self.day <= 9:
-    #             query = myCollection.remove({
-    #                 'publishedAt': '0{}-0{}-{}'.format(self.day, self.month, self.year)
-    #             })
-    #         else:
-    #             query = myCollection.remove({
-    #                 'publishedAt': '{}-0{}-{}'.format(self.day, self.month, self.year)
-    #             })
-    #     else:
-    #         if self.day <= 9:
-    #             query = myCollection.remove({
-    #                 'publishedAt': '0{}-{}-{}'.format(self.day, self.month, self.year)
-    #             })
-    #         else:
-    #             query = myCollection.remove({
-    #                 'publishedAt': '{}-{}-{}'.format(self.day, self.month, self.year)
-    #             })
-
-    #     return query
 
     ## fungsi untuk mencari sebuah entitas di dalam artikel berita
     def getNer(self, iData=None):

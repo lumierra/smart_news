@@ -232,7 +232,7 @@ class tempoScrapper():
     def tempoMonthly(self, category=None, nameCategory=None, year=None, month=None):
 
         iData = []
-        for i in tqdm(range(31), desc='Get Data'):
+        for i in tqdm(range(10), desc='Get Data'):
             try:
                 if month <= 9:
                     if i + 1 <= 9:
@@ -294,7 +294,7 @@ class tempoScrapper():
         return iData
 
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara bulanan
-    def iMonthly(self, category=None, nameCategory=None, year=None, month=None, day=None):
+    def iMonthly(self, category=None, nameCategory=None, year=None, month=None):
         iData = self.tempoMonthly(category, nameCategory, year, month)
         iData = self.getContent2((iData))
         iData = self.cleanData(iData)
