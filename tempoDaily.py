@@ -27,8 +27,7 @@ class Tempo():
         self.port = config['database']['mongo']['port']
         self.iSource = 'tempo.co'
         self.config = config
-        self.day = 6
-        # self.day = config['database']['mongo']['day']
+        self.day = 1
         self.month = 2
         self.year = now.year
 
@@ -61,63 +60,34 @@ class Tempo():
         DB.insertData(self.database, self.collection, iData)
 
     def tempoMonthly(self):
-        for i in range(3):
+        for d in range(28):
+            
             ## list category and name category from Tempo.co
-            # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
-            # list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+            list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
+            list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-            list_category_tempo = ['gaya', 'tekno', 'otomotif']
-            list_name_category_tempo = ['health', 'tekno', 'otomotif']
+            # list_category_tempo = ['gaya', 'tekno']
+            # list_name_category_tempo = ['health', 'tekno']
 
             #delete data from mongoDB
-            DB.delete_dataDaily(self.database, self.collection, self.iSource)
+            DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
 
             # Get Data
             for category, nameCategory in zip(list_category_tempo, list_name_category_tempo):
-                iData = scraperTempo.iDaily(category, nameCategory, self.year, self.month, i+1)
+                iData = scraperTempo.iDaily(category, nameCategory, self.year, self.month, d+1)
 
                 iAttr = []
                 for i in range(len(iData)):
                     iAttr.append(iData[i])
 
                 DB.insertData(self.database, self.collection, iAttr)
-
-            iQuery = scraperTempo.getNER(self.database, self.collection, self.iSource)
+            iQuery = scraperTempo.nerMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
             iData = []
             for q in iQuery:
                 iData.append(q)
-            DB.delete_dataDaily(self.database, self.collection, self.iSource)
+            DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
             DB.insertData(self.database, self.collection, iData)
-
-    # def tempoMonthly(self):
-    #     ## list category and name category from Tempo.co
-    #     list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
-    #     list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
-
-    #     # list_category_tempo = ['gaya']
-    #     # list_name_category_tempo = ['health']
-
-    #     #delete data from mongoDB
-    #     DB.delete_dataDaily(self.database, self.collection, self.iSource)
-
-    #     # Get Data
-    #     for category, nameCategory in zip(list_category_tempo, list_name_category_tempo):
-    #         iData = scraperTempo.iMonthly(category, nameCategory, self.year, self.month)
-
-    #         iAttr = []
-    #         for i in range(len(iData)):
-    #             iAttr.append(iData[i])
-
-    #         DB.insertData(self.database, self.collection, iAttr)
-
-    #     iQuery = scraperTempo.getNER(self.database, self.collection, self.iSource)
-    #     iData = []
-    #     for q in iQuery:
-    #         iData.append(q)
-    #     DB.delete_dataDaily(self.database, self.collection, self.iSource)
-    #     DB.insertData(self.database, self.collection, iData)
-
-    
+  
 
 iProgram = Tempo()
 iProgram.tempoMonthly()

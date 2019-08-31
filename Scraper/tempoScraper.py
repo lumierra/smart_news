@@ -25,6 +25,72 @@ stopwords = requests.get("https://raw.githubusercontent.com/masdevid/ID-Stopword
 class tempoScrapper():
     def __init__(self):
         self
+
+    ## fungsi untuk mendapatkan NER (Named Entity Recogtion) pada Artikel Berita
+    def nerMonthly(self, database=None, collection=None, source=None, day=None, month=None, year=None):
+
+        ## mengambil data dari mongoDB
+        iQuery = DB.getData(database, collection, source, day, month, year)
+
+        ## query dimasukkan ke dalam array
+        iData = []
+        for q in iQuery:
+            iData.append(q)
+
+        ## proses NLP
+        for i in range(len(iData)):
+            iText = iData[i]['content'].split('\n')
+            iTemp = []
+            for t in iText:
+                iTemp.append(t + '\n')
+            iText = ''.join(iTemp)
+            doc = nlp_ner(iText)
+            
+            ## proses perhitungan NER
+            PERSON, ORG, GPE, EVENT, MERK, PRODUCT = 0, 0, 0, 0, 0, 0
+            for ent in doc.ents:
+                if ent.label_ == 'PERSON':
+                    PERSON += 1
+                elif ent.label_ == 'ORG':
+                    ORG += 1
+                elif ent.label_ == 'GPE':
+                    GPE += 1
+                elif ent.label_ == 'EVENT':
+                    EVENT += 1
+                elif ent.label_ == 'MERK':
+                    MERK += 1
+                elif ent.label_ == 'PRODUCT':
+                    PRODUCT += 1
+
+            ## proses memberikan hasil banyaknya NER setiap artikel berita
+            iData[i]['countNer']['person'] = PERSON
+            iData[i]['countNer']['org'] = ORG
+            iData[i]['countNer']['gpe'] = GPE
+            iData[i]['countNer']['event'] = EVENT
+            iData[i]['countNer']['merk'] = MERK
+            iData[i]['countNer']['product'] = PRODUCT
+
+            ## proses membuat text biasa ke format html 
+            data = []
+            for ent in doc.ents:
+                data_json = {
+                    'text': ent.text,
+                    'label': ent.label_
+                }
+                data.append(data_json)
+            unique = {each['text']: each for each in data}.values()
+            data = []
+            for u in unique:
+                data.append(u)
+
+            for d in data:
+                iText = iText.replace(d['text'],'''<mark class="{label}-{_id} font-mark transparent style-{label}"> {text} </mark>'''.format(_id=iData[i]['_id'], label=d['label'], text=d['text']))
+            iText = ''.join(('''<div class="entities"> ''', iText, ' </div>'))
+            iText = iText.split('\n')
+
+            iData[i]['nerContent'] = iText
+
+        return iData
     
     ## fungsi untuk mendapatkan NER (Named Entity Recogtion) pada Artikel Berita
     def getNER(self, database=None, collection=None, source=None):

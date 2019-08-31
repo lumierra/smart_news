@@ -20,9 +20,8 @@ class Database():
         self.collection = config['database']['mongo']['collection']
         self.port = config['database']['mongo']['port']
         self.config = config
-        # self.day = 6
-        self.day = config['database']['mongo']['day']
-        self.month = 1
+        self.day = now.day
+        self.month = now.month
         self.year = now.year
 
     ## fungsi untuk mengecek koneksi mongoDB
@@ -76,6 +75,37 @@ class Database():
                 })
 
         return iQuery
+    
+    ## fungsi untuk mengambil data dari MongoDB (v2)
+    def getData(self, database=None, collection=None, source=None, day=None, month=None, year=None):
+        myClient = pymongo.MongoClient("mongodb://{}:{}".format(self.host, self.port))
+        myDB = myClient["{}".format(database)]
+        myCollection = myDB["{}".format(collection)]
+
+        if month <= 9:
+            if day <= 9:
+                iQuery = myCollection.find({
+                    'publishedAt': '0{}-0{}-{}'.format(day, month, year),
+                    'source' : source
+                })
+            else:
+                iQuery = myCollection.find({
+                    'publishedAt': '{}-0{}-{}'.format(day, month, year),
+                    'source': source
+                })
+        else:
+            if self.day <= 9:
+                iQuery = myCollection.find({
+                    'publishedAt': '0{}-{}-{}'.format(day, month, year),
+                    'source': source
+                })
+            else:
+                iQuery = myCollection.find({
+                    'publishedAt': '{}-{}-{}'.format(day, month, year),
+                    'source': source
+                })
+
+        return iQuery
 
     ## fungsi ini digunakan untuk menghapus data harian berdasarkan sourcenya
     def delete_dataDaily(self, database=None, collection=None, source=None):
@@ -103,6 +133,37 @@ class Database():
             else:
                 iQuery = myCollection.remove({
                     'publishedAt': '{}-{}-{}'.format(self.day, self.month, self.year),
+                    'source': source
+                })
+
+        return iQuery
+
+    ## fungsi delete monthly
+    def deleteMonthly(self, database=None, collection=None, source=None, day=None, month=None, year=None):
+        myClient = pymongo.MongoClient("mongodb://{}:{}".format(self.host, self.port))
+        myDB = myClient["{}".format(database)]
+        myCollection = myDB["{}".format(collection)]
+
+        if month <= 9:
+            if day <= 9:
+                iQuery = myCollection.remove({
+                    'publishedAt': '0{}-0{}-{}'.format(day, month, year),
+                    'source' : source
+                })
+            else:
+                iQuery = myCollection.remove({
+                    'publishedAt': '{}-0{}-{}'.format(day, month, year),
+                    'source': source
+                })
+        else:
+            if day <= 9:
+                iQuery = myCollection.remove({
+                    'publishedAt': '0{}-{}-{}'.format(day, month, year),
+                    'source': source
+                })
+            else:
+                iQuery = myCollection.remove({
+                    'publishedAt': '{}-{}-{}'.format(day, month, year),
                     'source': source
                 })
 
