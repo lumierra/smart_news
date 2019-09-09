@@ -33,11 +33,11 @@ class Liputan():
 
     def execute(self):
         ## list category and name category from Liputan6
-        # list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif']
-        # list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif']
+        list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif']
+        list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif']
 
-        list_category_liputan = ['health', ]
-        list_name_category_liputan = ['health']
+        # list_category_liputan = ['health', ]
+        # list_name_category_liputan = ['health']
 
         #delete data from mongoDB
         DB.delete_dataDaily(self.database, self.collection, self.iSource)

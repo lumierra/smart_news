@@ -94,7 +94,7 @@ class Database():
                     'source': source
                 })
         else:
-            if self.day <= 9:
+            if day <= 9:
                 iQuery = myCollection.find({
                     'publishedAt': '0{}-{}-{}'.format(day, month, year),
                     'source': source

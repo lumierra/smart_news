@@ -33,8 +33,8 @@ class Kompas():
 
     def execute(self):
         ## list category and name category from Kompas.com
-        list_category_kompas = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif']
-        list_name_category_kompas = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif']
+        list_category_kompas = ['dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif']
+        list_name_category_kompas = ['bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif']
 
         # list_category_kompas = ['tekno', ]
         # list_name_category_kompas = ['tekno']

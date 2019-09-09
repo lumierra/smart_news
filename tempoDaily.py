@@ -27,14 +27,17 @@ class Tempo():
         self.port = config['database']['mongo']['port']
         self.iSource = 'tempo.co'
         self.config = config
-        self.day = 1
-        self.month = 2
-        self.year = now.year
+        self.day = 10
+        self.month = 10
+        self.year = 2018
 
     def tempoDaily(self):
         ## list category and name category from Tempo.co
-        list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
-        list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+        # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
+        # list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+
+        list_category_tempo = ['nasional', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
+        list_name_category_tempo = ['news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
         # list_category_tempo = ['gaya']
         # list_name_category_tempo = ['health']
@@ -60,34 +63,41 @@ class Tempo():
         DB.insertData(self.database, self.collection, iData)
 
     def tempoMonthly(self):
-        for d in range(28):
+        try:
+            for d in range(10,15):
             
-            ## list category and name category from Tempo.co
-            list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
-            list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+                ## list category and name category from Tempo.co
+                # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
+                # list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-            # list_category_tempo = ['gaya', 'tekno']
-            # list_name_category_tempo = ['health', 'tekno']
+                list_category_tempo = ['nasional', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
+                list_name_category_tempo = ['news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-            #delete data from mongoDB
-            DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
+                # list_category_tempo = ['gaya', 'tekno']
+                # list_name_category_tempo = ['health', 'tekno']
 
-            # Get Data
-            for category, nameCategory in zip(list_category_tempo, list_name_category_tempo):
-                iData = scraperTempo.iDaily(category, nameCategory, self.year, self.month, d+1)
+                #delete data from mongoDB
+                DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
 
-                iAttr = []
-                for i in range(len(iData)):
-                    iAttr.append(iData[i])
+                # Get Data
+                for category, nameCategory in zip(list_category_tempo, list_name_category_tempo):
+                    iData = scraperTempo.iDaily(category, nameCategory, self.year, self.month, d+1)
 
-                DB.insertData(self.database, self.collection, iAttr)
-            iQuery = scraperTempo.nerMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
-            iData = []
-            for q in iQuery:
-                iData.append(q)
-            DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
-            DB.insertData(self.database, self.collection, iData)
+                    iAttr = []
+                    for i in range(len(iData)):
+                        iAttr.append(iData[i])
+
+                    DB.insertData(self.database, self.collection, iAttr)
+                iQuery = scraperTempo.nerMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
+                iData = []
+                for q in iQuery:
+                    iData.append(q)
+                DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
+                DB.insertData(self.database, self.collection, iData)
+        except:
+            pass
   
 
 iProgram = Tempo()
+# iProgram.tempoDaily()
 iProgram.tempoMonthly()

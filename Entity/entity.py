@@ -49,7 +49,7 @@ class Entity(object):
         myCollection = myDB["{}".format(collection)]
 
         iQuery = myCollection.find({
-            'publishedAt': '{}-0{}-{}'.format(self.day, self.month, self.year)
+            'publishedAt': '0{}-0{}-{}'.format(self.day, self.month, self.year)
         })
         iData = []
         for q in iQuery:
