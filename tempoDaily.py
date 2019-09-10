@@ -27,8 +27,8 @@ class Tempo():
         self.port = config['database']['mongo']['port']
         self.iSource = 'tempo.co'
         self.config = config
-        self.day = 10
-        self.month = 10
+        self.day = now.day
+        self.month = 11
         self.year = 2018
 
     def tempoDaily(self):
@@ -64,7 +64,7 @@ class Tempo():
 
     def tempoMonthly(self):
         try:
-            for d in range(10,15):
+            for d in range(25,30):
             
                 ## list category and name category from Tempo.co
                 # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']

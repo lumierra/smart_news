@@ -28,10 +28,10 @@ class Liputan():
         self.iSource = 'liputan6.com'
         self.config = config
         self.day = now.day
-        self.month = now.month
+        self.month = 1
         self.year = now.year
 
-    def execute(self):
+    def liputanDaily(self):
         ## list category and name category from Liputan6
         list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif']
         list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif']
@@ -58,6 +58,39 @@ class Liputan():
             iData.append(q)
         DB.delete_dataDaily(self.database, self.collection, self.iSource)
         DB.insertData(self.database, self.collection, iData)
+    
+    def liputanMonthly(self):
+        try:
+            for d in range(0,1):
+            
+                ## list category and name category from Liputan 6
+                list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif']
+                list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif']
+
+                # list_category_tempo = ['gaya', 'tekno']
+                # list_name_category_tempo = ['health', 'tekno']
+
+                #delete data from mongoDB
+                DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
+
+                # Get Data
+                for category, nameCategory in zip(list_category_tempo, list_name_category_tempo):
+                    iData = scraperLiputan.iDaily(category, nameCategory, self.year, self.month, d+1)
+
+                    iAttr = []
+                    for i in range(len(iData)):
+                        iAttr.append(iData[i])
+
+                    DB.insertData(self.database, self.collection, iAttr)
+                iQuery = scraperLiputan.nerMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
+                iData = []
+                for q in iQuery:
+                    iData.append(q)
+                DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
+                DB.insertData(self.database, self.collection, iData)
+        except:
+            pass
 
 iProgram = Liputan()
-iProgram.execute()
+# iProgram.liputanDaily()
+iProgram.liputanMonthly()
