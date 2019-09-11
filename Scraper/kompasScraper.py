@@ -185,13 +185,13 @@ class kompasScraper():
 
     ## fungsi ini digunakan untuk mendapatkan konten artikel berita
     def getContent(self, url=None):
-        
+        iData = []
         iResponse = requests.get(url).text
         iSoup = BeautifulSoup(iResponse, "html5lib")
         contents = iSoup.select_one('.photo > img')
         contents2 = iSoup.select('.read__content > p')
-        img = contents['src']
-        iData = []
+        img = contents['data-src']
+        
         for i in range(len(contents2)):
             if contents2[i].text != '':
                 if (contents2[i].text[:9] != 'Baca juga' and contents2[i].text[:5] != 'Baca:') \
@@ -461,13 +461,9 @@ class kompasScraper():
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara perhari
     def iDaily(self, category=None, nameCategory=None, year=None, month=None, day=None):
         iData = self.kompasDaily(category, nameCategory, year, month, day)
-        # print(iData[0])
         iData = self.getContent2(iData)
-        # print(iData)
         iData = self.cleanData(iData)
-        # print(iData)
         iData = self.cleanContent(iData)
-
         return iData
 
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara perbulan
@@ -478,6 +474,3 @@ class kompasScraper():
         iData = self.cleanContent(iData)
 
         return iData
-
-K = kompasScraper()
-K.iDaily('tekno','tekno',2019,9,11)
