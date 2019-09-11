@@ -64,8 +64,8 @@ class Kompas():
             for d in range(0,1):
             
                 ## list category and name category from Tempo.co
-                list_category_kompas = ['dunia', 'bisnis', 'olahraga', 'seleb', 'tekno', 'otomotif', 'lifestyle']
-                list_name_category_kompas = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
+                list_category_kompas = ['news', 'money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
+                list_name_category_kompas = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
                 # list_category_kompas = ['lifestyle']
                 # list_name_category_kompas = ['health']
