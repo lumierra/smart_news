@@ -33,8 +33,8 @@ class Kompas():
 
     def kompasDaily(self):
         ## list category and name category from Kompas.com
-        # list_category_kompas = ['dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif']
-        # list_name_category_kompas = ['bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif']
+        # list_category_kompas = ['dunia', 'bisnis', 'olahraga', 'seleb', 'tekno', 'otomotif', 'lifestyle']
+        # list_name_category_kompas = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
 
         list_category_kompas = ['tekno']
         list_name_category_kompas = ['tekno']
@@ -61,31 +61,28 @@ class Kompas():
 
     def kompasMonthly(self):
         try:
-            for d in range(0,5):
+            for d in range(0,1):
             
                 ## list category and name category from Tempo.co
-                # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
-                # list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+                list_category_kompas = ['dunia', 'bisnis', 'olahraga', 'seleb', 'tekno', 'otomotif', 'lifestyle']
+                list_name_category_kompas = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
 
-                list_category_tempo = ['nasional', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
-                list_name_category_tempo = ['news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
-
-                # list_category_tempo = ['gaya', 'tekno']
-                # list_name_category_tempo = ['health', 'tekno']
+                # list_category_kompas = ['lifestyle']
+                # list_name_category_kompas = ['health']
 
                 #delete data from mongoDB
                 DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
 
                 # Get Data
-                for category, nameCategory in zip(list_category_tempo, list_name_category_tempo):
-                    iData = scraperTempo.iDaily(category, nameCategory, self.year, self.month, d+1)
+                for category, nameCategory in zip(list_category_kompas, list_name_category_kompas):
+                    iData = scraperKompas.iDaily(category, nameCategory, self.year, self.month, d+1)
 
                     iAttr = []
                     for i in range(len(iData)):
                         iAttr.append(iData[i])
 
                     DB.insertData(self.database, self.collection, iAttr)
-                iQuery = scraperTempo.nerMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
+                iQuery = scraperKompas.nerMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
                 iData = []
                 for q in iQuery:
                     iData.append(q)
@@ -95,4 +92,5 @@ class Kompas():
             pass
 
 iProgram = Kompas()
-iProgram.kompasDaily()
+# iProgram.kompasDaily()
+iProgram.kompasMonthly()
