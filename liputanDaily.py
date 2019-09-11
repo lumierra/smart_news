@@ -61,20 +61,17 @@ class Liputan():
     
     def liputanMonthly(self):
         try:
-            for d in range(0,1):
+            for d in range(15,20):
             
                 ## list category and name category from Liputan 6
-                list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif']
-                list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif']
-
-                # list_category_tempo = ['gaya', 'tekno']
-                # list_name_category_tempo = ['health', 'tekno']
+                list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif', 'health']
+                list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
                 #delete data from mongoDB
                 DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
 
                 # Get Data
-                for category, nameCategory in zip(list_category_tempo, list_name_category_tempo):
+                for category, nameCategory in zip(list_category_liputan, list_name_category_liputan):
                     iData = scraperLiputan.iDaily(category, nameCategory, self.year, self.month, d+1)
 
                     iAttr = []

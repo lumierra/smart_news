@@ -32,6 +32,72 @@ class kompasScraper():
         self.day = now.day
 
     ## fungsi untuk mendapatkan NER (Named Entity Recogtion) pada Artikel Berita
+    def nerMonthly(self, database=None, collection=None, source=None, day=None, month=None, year=None):
+
+        ## mengambil data dari mongoDB
+        iQuery = DB.getData(database, collection, source, day, month, year)
+
+        ## query dimasukkan ke dalam array
+        iData = []
+        for q in iQuery:
+            iData.append(q)
+
+        ## proses NLP
+        for i in range(len(iData)):
+            iText = iData[i]['content'].split('\n')
+            iTemp = []
+            for t in iText:
+                iTemp.append(t + '\n')
+            iText = ''.join(iTemp)
+            doc = nlp_ner(iText)
+            
+            ## proses perhitungan NER
+            PERSON, ORG, GPE, EVENT, MERK, PRODUCT = 0, 0, 0, 0, 0, 0
+            for ent in doc.ents:
+                if ent.label_ == 'PERSON':
+                    PERSON += 1
+                elif ent.label_ == 'ORG':
+                    ORG += 1
+                elif ent.label_ == 'GPE':
+                    GPE += 1
+                elif ent.label_ == 'EVENT':
+                    EVENT += 1
+                elif ent.label_ == 'MERK':
+                    MERK += 1
+                elif ent.label_ == 'PRODUCT':
+                    PRODUCT += 1
+
+            ## proses memberikan hasil banyaknya NER setiap artikel berita
+            iData[i]['countNer']['person'] = PERSON
+            iData[i]['countNer']['org'] = ORG
+            iData[i]['countNer']['gpe'] = GPE
+            iData[i]['countNer']['event'] = EVENT
+            iData[i]['countNer']['merk'] = MERK
+            iData[i]['countNer']['product'] = PRODUCT
+
+            ## proses membuat text biasa ke format html 
+            data = []
+            for ent in doc.ents:
+                data_json = {
+                    'text': ent.text,
+                    'label': ent.label_
+                }
+                data.append(data_json)
+            unique = {each['text']: each for each in data}.values()
+            data = []
+            for u in unique:
+                data.append(u)
+
+            for d in data:
+                iText = iText.replace(d['text'],'''<mark class="{label}-{_id} font-mark transparent style-{label}"> {text} </mark>'''.format(_id=iData[i]['_id'], label=d['label'], text=d['text']))
+            iText = ''.join(('''<div class="entities"> ''', iText, ' </div>'))
+            iText = iText.split('\n')
+
+            iData[i]['nerContent'] = iText
+
+        return iData
+
+    ## fungsi untuk mendapatkan NER (Named Entity Recogtion) pada Artikel Berita
     def getNER(self, database=None, collection=None, source=None):
 
         ## mengambil data dari mongoDB
@@ -119,12 +185,12 @@ class kompasScraper():
 
     ## fungsi ini digunakan untuk mendapatkan konten artikel berita
     def getContent(self, url=None):
+        
         iResponse = requests.get(url).text
         iSoup = BeautifulSoup(iResponse, "html5lib")
         contents = iSoup.select_one('.photo > img')
         contents2 = iSoup.select('.read__content > p')
         img = contents['src']
-
         iData = []
         for i in range(len(contents2)):
             if contents2[i].text != '':
@@ -146,12 +212,12 @@ class kompasScraper():
             "content": ordinaryContent,
             "contentHTML": htmlContent
         }
-
+        
         return iJson
 
     ## fungsi ini digunakan untuk mendapatkan konten artikel berita
     def getContent2(self, iData=None):
-        for i in tqdm(range(len(iData))):
+        for i in tqdm(range(len(iData)), desc='Get Content'):
             try:
                 iTemp = self.getContent(iData[i]['url'])
                 iData[i]['content'] = iTemp['content']
@@ -160,7 +226,7 @@ class kompasScraper():
                 iData[i]['description'] = iData[i]['title'] + ' ' + iData[i]['content'][:255] + '....'
             except:
                 pass
-
+        
         return iData
 
     ## fungsi ini digunakan untuk membersihkan konten di dalam artikel berita
@@ -185,49 +251,45 @@ class kompasScraper():
 
         return iResult
 
-    ## fungsi ini digunakan untuk mengambil data (crawler) artikel berita pada liputan6 secara perbulan
-    def kompasMonthly(self, category=None, nameCategory=None, tahun=None, bulan=None):
-        all_data = []
-        for tanggal in tqdm(range(31), desc='Get Data Monthly'):
+    ## fungsi ini digunakan untuk mengambil data (crawler) artikel berita pada kompas.com secara perbulan
+    def kompasMonthly(self, category=None, nameCategory=None, year=None, month=None):
+        iData = []
+        for day in tqdm(range(31), desc='Get Data Monthly'):
             try:
-                url = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, tahun, bulan, tanggal + 1)
-                data = requests.get(url)
-                html = data.text
-                soup = BeautifulSoup(html, "html5lib")
-                count_page = soup.select('.paging__wrap.clearfix > .paging__item')
+                iUrl = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, tahun, bulan, day + 1)
+                iResponse = requests.get(iUrl)
+                iSoup = BeautifulSoup(iResponse, "html5lib")
+                countPage = iSoup.select('.paging__wrap.clearfix > .paging__item')
 
-                if count_page == []:
-                    url_lokal = '''https://{}.kompas.com/search/{}-{}-{}'''.format(global_category, tahun, bulan,
-                                                                                   tanggal + 1)
-                    data = requests.get(url_lokal)
-                    html = data.text
-                    soup = BeautifulSoup(html, "html5lib")
-
-                    contents = soup.select('.article__list.clearfix')
-                    print(url_lokal)
+                if countPage == []:
+                    url = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, year, month , day + 1)
+                    iResponse = requests.get(url).text
+                    iSoup = BeautifulSoup(iResponse, "html5lib")
+                    contents = iSoup.select('.article__list.clearfix')
+                    print(url)
 
                     for content in contents:
                         try:
-                            temp_category = content.select_one('.article__subtitle').text.strip()
-                            temp_url = content.select_one('.article__link')['href']
-                            temp_title = content.select_one('.article__link').text.strip()
-                            temp_date = content.select_one('.article__date').text.replace(',', '').split()[0]
-                            temp_date = datetime.datetime.strptime(temp_date, "%d/%m/%Y").strftime("%d-%m-%Y")
+                            iCategory = content.select_one('.article__subtitle').text.strip()
+                            realUrl = content.select_one('.article__link')['href']
+                            iTitle = content.select_one('.article__link').text.strip()
+                            iDate = content.select_one('.article__date').text.replace(',', '').split()[0]
+                            iDate = datetime.datetime.strptime(iDate, "%d/%m/%Y").strftime("%d-%m-%Y")
 
-                            data_json = {
+                            iJson = {
                                 "category": nameCategory,
-                                "title": temp_title,
+                                "title": iTitle,
                                 "description": '',
-                                "url": temp_url,
+                                "url": realUrl,
                                 "content": '',
-                                "content_html": '',
+                                "contentHTML": '',
                                 "img": '',
-                                "sub_category": temp_category,
-                                "publishedAt": temp_date,
+                                "subCategory": iCategory,
+                                "publishedAt": iDate,
                                 "source": 'kompas.com',
-                                "clean_content": '',
-                                "ner_content": '',
-                                'count_ner': {
+                                "cleanContent": '',
+                                "nerContent": '',
+                                'countNer': {
                                     'person': 0,
                                     'org': 0,
                                     'gpe': 0,
@@ -235,49 +297,45 @@ class kompasScraper():
                                     'merk': 0,
                                     'product': 0
                                 }
-
                             }
 
-                            all_data.append(data_json)
+                            iData.append(iJson)
 
                         except:
                             pass
                 else:
-                    total_page = int(count_page[len(count_page) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
+                    totalPage = int(count_page[len(countPage) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
 
-                    for y in range(total_page):
+                    for y in range(totalPage):
                         try:
-                            url_lokal = '''https://{}.kompas.com/search/{}-{}-{}/{}'''.format(global_category, tahun, bulan,
-                                                                                              tanggal + 1, y + 1)
-                            data = requests.get(url_lokal)
-                            html = data.text
-                            soup = BeautifulSoup(html, "html5lib")
-
-                            contents = soup.select('.article__list.clearfix')
-                            print(url_lokal)
+                            url = '''https://{}.kompas.com/search/{}-{}-{}/{}'''.format(category, year, month, day + 1, y + 1)
+                            iResponse = requests.get(url).text
+                            iSoup = BeautifulSoup(iResponse, "html5lib")
+                            contents = iSoup.select('.article__list.clearfix')
+                            print(url)
 
                             for content in contents:
                                 try:
-                                    temp_category = content.select_one('.article__subtitle').text.strip()
-                                    temp_url = content.select_one('.article__link')['href']
-                                    temp_title = content.select_one('.article__link').text.strip()
-                                    temp_date = content.select_one('.article__date').text.replace(',', '').split()[0]
-                                    temp_date = datetime.datetime.strptime(temp_date, "%d/%m/%Y").strftime("%d-%m-%Y")
+                                    iCategory = content.select_one('.article__subtitle').text.strip()
+                                    realUrl = content.select_one('.article__link')['href']
+                                    iTitle = content.select_one('.article__link').text.strip()
+                                    iDate = content.select_one('.article__date').text.replace(',', '').split()[0]
+                                    iDate = datetime.datetime.strptime(iDate, "%d/%m/%Y").strftime("%d-%m-%Y")
 
-                                    data_json = {
-                                        "category": name_category,
-                                        "title": temp_title,
+                                    iJson = {
+                                        "category": nameCategory,
+                                        "title": iTitle,
                                         "description": '',
-                                        "url": temp_url,
+                                        "url": realUrl,
                                         "content": '',
-                                        "content_html": '',
+                                        "contentHTML": '',
                                         "img": '',
-                                        "sub_category": temp_category,
-                                        "publishedAt": temp_date,
+                                        "subCategory": iCategory,
+                                        "publishedAt": iDate,
                                         "source": 'kompas.com',
-                                        "clean_content": '',
-                                        "ner_content": '',
-                                        'count_ner': {
+                                        "cleanContent": '',
+                                        "nerContent": '',
+                                        'countNer': {
                                             'person': 0,
                                             'org': 0,
                                             'gpe': 0,
@@ -287,7 +345,7 @@ class kompasScraper():
                                         }
                                     }
 
-                                    all_data.append(data_json)
+                                    iData.append(iJson)
 
                                 except:
                                     pass
@@ -296,9 +354,9 @@ class kompasScraper():
             except:
                 pass
 
-        return all_data
+        return iData
 
-    ## fungsi ini digunakan untuk mengambil data (crawler) artikel berita pada liputan6 secara perhari
+    ## fungsi ini digunakan untuk mengambil data (crawler) artikel berita pada kompas.com secara perhari
     def kompasDaily(self, category=None, nameCategory=None, year=None, month=None, day=None):
         iData = []
         iUrl = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, year, month, day)
@@ -313,7 +371,7 @@ class kompasScraper():
             contents = iSoup.select('.article__list.clearfix')
             print(url)
 
-            for content in contents:
+            for content in contents[:1]:
                 try:
                     iCategory = content.select_one('.article__subtitle').text.strip()
                     realUrl = content.select_one('.article__link')['href']
@@ -403,8 +461,11 @@ class kompasScraper():
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara perhari
     def iDaily(self, category=None, nameCategory=None, year=None, month=None, day=None):
         iData = self.kompasDaily(category, nameCategory, year, month, day)
+        # print(iData[0])
         iData = self.getContent2(iData)
+        # print(iData)
         iData = self.cleanData(iData)
+        # print(iData)
         iData = self.cleanContent(iData)
 
         return iData
@@ -417,3 +478,6 @@ class kompasScraper():
         iData = self.cleanContent(iData)
 
         return iData
+
+K = kompasScraper()
+K.iDaily('tekno','tekno',2019,9,11)

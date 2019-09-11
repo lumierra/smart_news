@@ -196,14 +196,14 @@ class tempoScrapper():
         htmlContent = self.nerText(htmlContent)
         htmlContent = htmlContent.split('\n\n')
 
-        data_json = {
+        iJson = {
             "subCategory": subCategory,
             "img": img,
             "content": ordinaryContent,
             "contentHTML": htmlContent
         }
 
-        return data_json
+        return iJson
 
     ## fungsi ini digunakan untuk mendapatkan konten artikel berita
     def getContent2(self, iData=None):
