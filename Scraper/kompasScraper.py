@@ -371,7 +371,7 @@ class kompasScraper():
             contents = iSoup.select('.article__list.clearfix')
             print(url)
 
-            for content in contents[:1]:
+            for content in contents:
                 try:
                     iCategory = content.select_one('.article__subtitle').text.strip()
                     realUrl = content.select_one('.article__link')['href']
