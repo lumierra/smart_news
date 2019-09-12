@@ -11,4 +11,5 @@ database :
     database : 'iStorage'
     collection : 'iData'
     entity : 'topEntity'
+    counter: 'iCounter'
     port : 27017
