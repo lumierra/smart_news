@@ -28,16 +28,16 @@ class Kompas():
         self.iSource = 'kompas.com'
         self.config = config
         self.day = now.day
-        self.month = 5
+        self.month = 7
         self.year = now.year
 
     def kompasDaily(self):
         ## list category and name category from Kompas.com
-        # list_category_kompas = ['dunia', 'bisnis', 'olahraga', 'seleb', 'tekno', 'otomotif', 'lifestyle']
-        # list_name_category_kompas = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
+        list_category_kompas = ['news', 'money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
+        list_name_category_kompas = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-        list_category_kompas = ['tekno']
-        list_name_category_kompas = ['tekno']
+        # list_category_kompas = ['tekno']
+        # list_name_category_kompas = ['tekno']
 
         #delete data from mongoDB
         DB.delete_dataDaily(self.database, self.collection, self.iSource)
@@ -61,7 +61,7 @@ class Kompas():
 
     def kompasMonthly(self):
         try:
-            for d in range(5,10):
+            for d in range(15,20):
             
                 ## list category and name category from Tempo.co
                 list_category_kompas = ['news', 'money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
@@ -92,7 +92,7 @@ class Kompas():
             pass
 
 iProgram = Kompas()
-# # iProgram.kompasDaily()
+# iProgram.kompasDaily()
 iProgram.kompasMonthly()
 
 # iQuery = scraperKompas.nerMonthly('iStorage', 'iData', 'kompas.com', 15, 4, 2019)
