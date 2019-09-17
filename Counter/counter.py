@@ -1,4 +1,5 @@
 from pymongo.errors import ServerSelectionTimeoutError
+from tqdm import tqdm
 import datetime
 import pymongo
 import yaml
@@ -72,7 +73,7 @@ class Counter():
             iData.append(q)
 
         news, bisnis, entertainment, sports, tekno, otomotif, health = 0,0,0,0,0,0,0
-        for data in iData:
+        for data in tqdm(iData , desc='Category'):
             if data['category'] == 'news': news=news+1
             elif data['category'] == 'bisnis': bisnis=bisnis+1
             elif data['category'] == 'entertainment': entertainment=entertainment+1
@@ -82,7 +83,7 @@ class Counter():
             elif data['category'] == 'health': health=health+1
         
         kompas, tempo, liputan = 0,0,0
-        for data in iData:
+        for data in tqdm(iData, desc='Sumber'):
             if data['source'] == 'kompas.com': kompas=kompas+1
             elif data['source'] == 'tempo.co': tempo=tempo+1
             elif data['source'] == 'liputan6.com': liputan=liputan+1
