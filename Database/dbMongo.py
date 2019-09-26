@@ -168,3 +168,18 @@ class Database():
                 })
 
         return iQuery
+
+    def deleteDataMonthly(self, database=None, collection=None, source=None, month=None, year=None):
+        myClient = pymongo.MongoClient("mongodb://{}:{}".format(self.host, self.port))
+        myDB = myClient["{}".format(database)]
+        myCollection = myDB["{}".format(collection)]
+
+        iQuery = myCollection.deleteMany({
+            'source' : source,
+            'publishedAt': {
+                '$gte': '01-{}-{}'.format(month, year),
+                '$lte': '31-{}-{}'.format(month, year)
+            }
+        })
+
+        return iQuery

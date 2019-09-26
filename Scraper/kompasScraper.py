@@ -254,15 +254,17 @@ class kompasScraper():
     ## fungsi ini digunakan untuk mengambil data (crawler) artikel berita pada kompas.com secara perbulan
     def kompasMonthly(self, category=None, nameCategory=None, year=None, month=None):
         iData = []
-        for day in tqdm(range(31), desc='Get Data Monthly'):
+        for i in tqdm(range(31), desc='Get Data Monthly'):
             try:
-                iUrl = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, tahun, bulan, day + 1)
-                iResponse = requests.get(iUrl)
+                iUrl = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, tahun, bulan, i + 1)
+                iResponse = requests.get(iUrl).text
                 iSoup = BeautifulSoup(iResponse, "html5lib")
                 countPage = iSoup.select('.paging__wrap.clearfix > .paging__item')
 
+                if category == 'news': countPage = 3
+
                 if countPage == []:
-                    url = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, year, month , day + 1)
+                    url = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, year, month , i + 1)
                     iResponse = requests.get(url).text
                     iSoup = BeautifulSoup(iResponse, "html5lib")
                     contents = iSoup.select('.article__list.clearfix')
@@ -308,7 +310,7 @@ class kompasScraper():
 
                     for y in range(totalPage):
                         try:
-                            url = '''https://{}.kompas.com/search/{}-{}-{}/{}'''.format(category, year, month, day + 1, y + 1)
+                            url = '''https://{}.kompas.com/search/{}-{}-{}/{}'''.format(category, year, month, i + 1, y + 1)
                             iResponse = requests.get(url).text
                             iSoup = BeautifulSoup(iResponse, "html5lib")
                             contents = iSoup.select('.article__list.clearfix')
@@ -407,8 +409,9 @@ class kompasScraper():
                 except:
                     pass
         else:
-            totalPage = int(countPage[len(countPage) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
-
+            
+            if category == 'news': totalPage = 3
+            else: totalPage = int(countPage[len(countPage) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
             for y in range(totalPage):
                 try:
                     url = '''https://{}.kompas.com/search/{}-{}-{}/{}'''.format(category, year, month, day, y + 1)
