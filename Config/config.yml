@@ -8,8 +8,8 @@ database :
     port : 3306
   mongo :
     host : '127.0.0.1'
-    database : 'iData'
-    collection : 'test'
+    database : 'iStorage'
+    collection : 'iData'
     entity : 'topEntity'
     counter: 'iCounter'
     port : 27017

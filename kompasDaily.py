@@ -28,8 +28,8 @@ class Kompas():
         self.iSource = 'kompas.com'
         self.config = config
         self.day = now.day
-        self.month = 1
-        self.year = 2018
+        self.month = now.month
+        self.year = now.year
 
     def kompasDaily(self):
         ## list category and name category from Kompas.com
@@ -61,7 +61,7 @@ class Kompas():
 
     def kompasMonthly(self):
         try:
-            for d in range(0,1):
+            for d in range(20,31):
             
                 ## list category and name category from Tempo.co
                 list_category_kompas = ['news', 'money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
@@ -95,10 +95,3 @@ class Kompas():
 iProgram = Kompas()
 iProgram.kompasDaily()
 # iProgram.kompasMonthly()
-
-# iQuery = scraperKompas.nerMonthly('iStorage', 'iData', 'kompas.com', 15, 4, 2019)
-# iData = []
-# for q in iQuery:
-#     iData.append(q)
-# DB.deleteMonthly('iStorage', 'iData', 'kompas.com', 15, 4, 2019)
-# DB.insertData('iStorage', 'iData', iData)
