@@ -61,7 +61,7 @@ class Kompas():
 
     def kompasMonthly(self):
         try:
-            for d in range(20,31):
+            for d in range(0,1):
             
                 ## list category and name category from Tempo.co
                 list_category_kompas = ['news', 'money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
