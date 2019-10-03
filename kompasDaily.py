@@ -28,7 +28,7 @@ class Kompas():
         self.iSource = 'kompas.com'
         self.config = config
         self.day = now.day
-        self.month = now.month
+        self.month = 2
         self.year = now.year
 
     def kompasDaily(self):
@@ -61,21 +61,21 @@ class Kompas():
 
     def kompasMonthly(self):
         try:
-            for d in range(0,1):
+            for d in range(0,28):
             
                 ## list category and name category from Tempo.co
-                list_category_kompas = ['news', 'money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
-                list_name_category_kompas = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+                # list_category_kompas = ['news', 'money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
+                # list_name_category_kompas = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-                # list_category_kompas = ['lifestyle']
-                # list_name_category_kompas = ['health']
+                list_category_kompas = ['money']
+                list_name_category_kompas = ['bisnis']
 
                 #delete data from mongoDB
                 DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)
 
                 # Get Data
                 for category, nameCategory in zip(list_category_kompas, list_name_category_kompas):
-                    iData = scraperKompas.iDaily(category, nameCategory, self.year, self.month, d+1)
+                    iData = scraperKompas.Money(category, nameCategory, self.year, self.month, d+1)
 
                     iAttr = []
                     for i in range(len(iData)):
@@ -93,5 +93,5 @@ class Kompas():
     
     
 iProgram = Kompas()
-iProgram.kompasDaily()
-# iProgram.kompasMonthly()
+# iProgram.kompasDaily()
+iProgram.kompasMonthly()
