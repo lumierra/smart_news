@@ -578,10 +578,3 @@ class kompasScraper():
         iData = self.cleanContent(iData)
 
         return iData
-
-    def Money(self, category=None, nameCategory=None, year=None, month=None, day=None):
-        iData = self.getMoney(category, nameCategory, year, month, day)
-        iData = self.getContent2(iData)
-        iData = self.cleanData(iData)
-        iData = self.cleanContent(iData)
-        return iData
