@@ -251,107 +251,6 @@ class kompasScraper():
 
         return iResult
 
-    ## fungsi ini digunakan untuk scraping artikel kategori money/bisnis
-    def getMoney(self, category=None, nameCategory=None, year=None, month=None, day=None):
-        iData = []
-        iUrl = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, year, month, day)
-        iResponse = requests.get(iUrl).text
-        iSoup = BeautifulSoup(iResponse, "html5lib")
-        countPage = iSoup.select('.paging__wrap.clearfix > .paging__item')
-
-        if countPage == []:
-            url = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, year, month, day)
-            iResponse = requests.get(url).text
-            iSoup = BeautifulSoup(iResponse, "html5lib")
-            contents = iSoup.select('.terkini__post')
-            print(url)
-
-            for content in contents:
-                try:
-                    iCategory = content.select_one('.terkini__subtitle').text.strip()
-                    realUrl = content.select_one('.terkini__img > a')['href']
-                    iTitle = content.select_one('.terkini__title').text.strip()
-                    iDate = realUrl.split('/')[6] + '-' + realUrl.split('/')[5] + '-' + realUrl.split('/')[4]
-
-                    iJson = {
-                        "category": nameCategory,
-                        "title": iTitle,
-                        "description": '',
-                        "url": realUrl,
-                        "content": '',
-                        "contentHTML": '',
-                        "img": '',
-                        "subCategory": iCategory,
-                        "publishedAt": iDate,
-                        "source": 'kompas.com',
-                        "cleanContent": '',
-                        "nerContent": '',
-                        'countNer': {
-                            'person': 0,
-                            'org': 0,
-                            'gpe': 0,
-                            'event': 0,
-                            'merk': 0,
-                            'product': 0
-                        }
-                    }
-
-                    iData.append(iJson)
-
-                except:
-                    pass
-        else:
-            
-            if category == 'news': totalPage = 3
-            else: totalPage = int(countPage[len(countPage) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
-            for y in range(totalPage):
-                try:
-                    url = '''https://{}.kompas.com/search/{}-{}-{}/{}'''.format(category, year, month, day, y + 1)
-                    iResponse = requests.get(url).text
-                    iSoup = BeautifulSoup(iResponse, "html5lib")
-                    contents = iSoup.select('.terkini__post')
-                    print(url)
-
-                    for content in contents:
-                        try:
-                            iCategory = content.select_one('.terkini__subtitle').text.strip()
-                            realUrl = content.select_one('.terkini__img > a')['href']
-                            iTitle = content.select_one('.terkini__title').text.strip()
-                            iDate = realUrl.split('/')[6] + '-' + realUrl.split('/')[5] + '-' + realUrl.split('/')[4]
-
-                            iJson = {
-                                "category": nameCategory,
-                                "title": iTitle,
-                                "description": '',
-                                "url": realUrl,
-                                "content": '',
-                                "contentHTML": '',
-                                "img": '',
-                                "subCategory": iCategory,
-                                "publishedAt": iDate,
-                                "source": 'kompas.com',
-                                "cleanContent": '',
-                                "nerContent": '',
-                                'countNer': {
-                                    'person': 0,
-                                    'org': 0,
-                                    'gpe': 0,
-                                    'event': 0,
-                                    'merk': 0,
-                                    'product': 0
-                                }
-                            }
-
-
-                            iData.append(iJson)
-
-                        except:
-                            pass
-                except:
-                    pass
-
-        return iData
-
     ## fungsi ini digunakan untuk mengambil data (crawler) artikel berita pada kompas.com secara perbulan
     def kompasMonthly(self, category=None, nameCategory=None, year=None, month=None):
         iData = []
@@ -368,16 +267,23 @@ class kompasScraper():
                     url = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, year, month , i + 1)
                     iResponse = requests.get(url).text
                     iSoup = BeautifulSoup(iResponse, "html5lib")
-                    contents = iSoup.select('.article__list.clearfix')
+                    if category == 'money': contents = iSoup.select('.terkini__post')
+                    else: contents = iSoup.select('.article__list.clearfix')
                     print(url)
 
                     for content in contents:
                         try:
-                            iCategory = content.select_one('.article__subtitle').text.strip()
-                            realUrl = content.select_one('.article__link')['href']
-                            iTitle = content.select_one('.article__link').text.strip()
-                            iDate = content.select_one('.article__date').text.replace(',', '').split()[0]
-                            iDate = datetime.datetime.strptime(iDate, "%d/%m/%Y").strftime("%d-%m-%Y")
+                            if category == 'money':
+                                iCategory = content.select_one('.terkini__subtitle').text.strip()
+                                realUrl = content.select_one('.terkini__img > a')['href']
+                                iTitle = content.select_one('.terkini__title').text.strip()
+                                iDate = realUrl.split('/')[6] + '-' + realUrl.split('/')[5] + '-' + realUrl.split('/')[4]
+                            else:
+                                iCategory = content.select_one('.article__subtitle').text.strip()
+                                realUrl = content.select_one('.article__link')['href']
+                                iTitle = content.select_one('.article__link').text.strip()
+                                iDate = content.select_one('.article__date').text.replace(',', '').split()[0]
+                                iDate = datetime.datetime.strptime(iDate, "%d/%m/%Y").strftime("%d-%m-%Y")
 
                             iJson = {
                                 "category": nameCategory,
@@ -419,11 +325,17 @@ class kompasScraper():
 
                             for content in contents:
                                 try:
-                                    iCategory = content.select_one('.article__subtitle').text.strip()
-                                    realUrl = content.select_one('.article__link')['href']
-                                    iTitle = content.select_one('.article__link').text.strip()
-                                    iDate = content.select_one('.article__date').text.replace(',', '').split()[0]
-                                    iDate = datetime.datetime.strptime(iDate, "%d/%m/%Y").strftime("%d-%m-%Y")
+                                    if category == 'money':
+                                        iCategory = content.select_one('.terkini__subtitle').text.strip()
+                                        realUrl = content.select_one('.terkini__img > a')['href']
+                                        iTitle = content.select_one('.terkini__title').text.strip()
+                                        iDate = realUrl.split('/')[6] + '-' + realUrl.split('/')[5] + '-' + realUrl.split('/')[4]
+                                    else:
+                                        iCategory = content.select_one('.article__subtitle').text.strip()
+                                        realUrl = content.select_one('.article__link')['href']
+                                        iTitle = content.select_one('.article__link').text.strip()
+                                        iDate = content.select_one('.article__date').text.replace(',', '').split()[0]
+                                        iDate = datetime.datetime.strptime(iDate, "%d/%m/%Y").strftime("%d-%m-%Y")
 
                                     iJson = {
                                         "category": nameCategory,
