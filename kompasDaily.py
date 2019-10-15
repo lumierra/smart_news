@@ -27,8 +27,8 @@ class Kompas():
         self.port = config['database']['mongo']['port']
         self.iSource = 'kompas.com'
         self.config = config
-        self.day = now.day
-        self.month = 1
+        self.day = 1
+        self.month = 10
         self.year = now.year
 
     def kompasDaily(self):
@@ -75,7 +75,7 @@ class Kompas():
 
                 # Get Data
                 for category, nameCategory in zip(list_category_kompas, list_name_category_kompas):
-                    iData = scraperKompas.iMonthly(category, nameCategory, self.year, self.month, d+1)
+                    iData = scraperKompas.iDaily(category, nameCategory, self.year, self.month, d+1)
 
                     iAttr = []
                     for i in range(len(iData)):
