@@ -75,7 +75,7 @@ class Kompas():
 
                 # Get Data
                 for category, nameCategory in zip(list_category_kompas, list_name_category_kompas):
-                    iData = scraperKompas.kompasMonthly(category, nameCategory, self.year, self.month, d+1)
+                    iData = scraperKompas.iMonthly(category, nameCategory, self.year, self.month, d+1)
 
                     iAttr = []
                     for i in range(len(iData)):
