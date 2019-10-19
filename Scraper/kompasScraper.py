@@ -431,8 +431,9 @@ class kompasScraper():
                     pass
         else:
             
-            if category == 'news': totalPage = 3
-            else: totalPage = int(countPage[len(countPage) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
+            # if category == 'news': totalPage = 3
+            # else: totalPage = int(countPage[len(countPage) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
+            totalPage = int(countPage[len(countPage) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
             for y in range(totalPage):
                 try:
                     url = '''https://{}.kompas.com/search/{}-{}-{}/{}'''.format(category, year, month, day, y + 1)

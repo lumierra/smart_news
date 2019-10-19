@@ -28,7 +28,7 @@ class Tempo():
         self.iSource = 'tempo.co'
         self.config = config
         self.day = now.day
-        self.month = now.month
+        self.month = 10
         self.year = now.year
 
     def tempoDaily(self):
@@ -64,7 +64,7 @@ class Tempo():
 
     def tempoMonthly(self):
         try:
-            for d in range(0,2):
+            for d in range(15,18):
             
                 ## list category and name category from Tempo.co
                 # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
@@ -99,5 +99,5 @@ class Tempo():
   
 
 iProgram = Tempo()
-iProgram.tempoDaily()
-# iProgram.tempoMonthly()
+# iProgram.tempoDaily()
+iProgram.tempoMonthly()

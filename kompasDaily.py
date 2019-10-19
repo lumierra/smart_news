@@ -61,14 +61,14 @@ class Kompas():
 
     def kompasMonthly(self):
         try:
-            for d in range(0,5):
+            for d in range(15,18):
             
                 ## list category and name category from Tempo.co
                 list_category_kompas = ['news', 'money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
                 list_name_category_kompas = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-                # list_category_kompas = ['money']
-                # list_name_category_kompas = ['bisnis']
+                # list_category_kompas = ['money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
+                # list_name_category_kompas = ['bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
                 #delete data from mongoDB
                 DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)

@@ -61,7 +61,7 @@ class Liputan():
     
     def liputanMonthly(self):
         try:
-            for d in range(15,20):
+            for d in range(25,25):
             
                 ## list category and name category from Liputan 6
                 list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif', 'health']
