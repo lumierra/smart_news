@@ -26,7 +26,7 @@ class Entity(object):
         self.entity = config['database']['mongo']['entity']
         self.port = config['database']['mongo']['port']
         self.config = config
-        self.day = now.day
+        self.day = 24
         self.month = now.month
         self.year = now.year
 
@@ -48,9 +48,25 @@ class Entity(object):
         myDB = myClient["{}".format(database)]
         myCollection = myDB["{}".format(collection)]
 
-        iQuery = myCollection.find({
-            'publishedAt': '{}-0{}-{}'.format(self.day, self.month, self.year)
-        })
+        if self.month <= 9:
+            if self.day <= 9:
+                iQuery = myCollection.find({
+                    'publishedAt': '0{}-0{}-{}'.format(self.day, self.month, self.year)
+                })
+            else:
+                iQuery = myCollection.find({
+                    'publishedAt': '{}-0{}-{}'.format(self.day, self.month, self.year)
+                })
+        else:
+            if self.day <= 9:
+                iQuery = myCollection.find({
+                    'publishedAt': '0{}-{}-{}'.format(self.day, self.month, self.year)
+                })
+            else:
+                iQuery = myCollection.find({
+                    'publishedAt': '{}-{}-{}'.format(self.day, self.month, self.year)
+                })
+
         iData = []
         for q in iQuery:
             iData.append(q)

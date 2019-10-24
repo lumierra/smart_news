@@ -61,11 +61,14 @@ class Liputan():
     
     def liputanMonthly(self):
         try:
-            for d in range(25,25):
+            for d in range(30,31):
             
                 ## list category and name category from Liputan 6
-                list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif', 'health']
-                list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+                # list_category_liputan = ['news', 'bisnis', 'bola', 'showbiz', 'tekno', 'otomotif', 'health']
+                # list_name_category_liputan = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+
+                list_category_liputan = ['tekno', 'otomotif', 'health']
+                list_name_category_liputan = ['tekno', 'otomotif', 'health']
 
                 #delete data from mongoDB
                 DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)

@@ -27,8 +27,8 @@ class Kompas():
         self.port = config['database']['mongo']['port']
         self.iSource = 'kompas.com'
         self.config = config
-        self.day = 1
-        self.month = 10
+        self.day = now.day
+        self.month = now.month
         self.year = now.year
 
     def kompasDaily(self):
@@ -93,5 +93,5 @@ class Kompas():
     
     
 iProgram = Kompas()
-# iProgram.kompasDaily()
-iProgram.kompasMonthly()
+iProgram.kompasDaily()
+# iProgram.kompasMonthly()
