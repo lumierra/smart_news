@@ -26,7 +26,7 @@ class Entity(object):
         self.entity = config['database']['mongo']['entity']
         self.port = config['database']['mongo']['port']
         self.config = config
-        self.day = 24
+        self.day = now.day
         self.month = now.month
         self.year = now.year
 
