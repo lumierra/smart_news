@@ -4,11 +4,14 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 import id_beritagar as indo
 import requests
+import datetime
 import id_aldo
 import sys
 
 sys.path.insert(0, '/home/lumierra/smart_news/Database/')
 import dbMongo
+
+now = datetime.date.today()
 
 ## Load NLP
 nlp = id_aldo.load()
@@ -24,7 +27,9 @@ stopwords = requests.get("https://raw.githubusercontent.com/masdevid/ID-Stopword
 ## Class Scraper Tempo.co
 class tempoScrapper():
     def __init__(self):
-        self
+        self.day = now.day
+        self.month = now.month
+        self.year = now.year
 
     ## fungsi untuk mendapatkan NER (Named Entity Recogtion) pada Artikel Berita
     def nerMonthly(self, database=None, collection=None, source=None, day=None, month=None, year=None):
@@ -242,42 +247,47 @@ class tempoScrapper():
 
         return iResult
 
+    ## fungsi ini digunakan untuk mengambil url dari rss tempo.co
+    def getTempoRSS(self):
+        tempo = []
+        iUrl = '''http://rss.tempo.co/'''
+        iResponse = requests.get(iUrl).text
+        iSoup = BeautifulSoup(iResponse, "xml")
+        iTems = iSoup.select('item')
+
+        for item in iTems:
+            link = item.select_one('link').text
+            title = item.select_one('title').text
+            date = "{}-{}-{}".format(self.day, self.month, self.year)
+            print(link)
+            json = {
+                'url': link,
+                'title': title,
+                'date' : date,
+                'sumber': 'tempo.co'
+            }
+            tempo.append(json)
+        
+        return tempo
+
     ## fungsi ini digunakan untuk mengambil sumber data dari Tempo.co secara harian
-    def tempoDaily(self, category=None, nameCategory=None, year=None, month=None, day=None):
+    def getTempo(self, data=None):
 
         iData = []
-        if month <= 9:
-            if day <= 9:
-                iUrl = '''https://www.tempo.co/indeks/{}/0{}/0{}/{}'''.format(year, month, day, category)
-            else:
-                iUrl = '''https://www.tempo.co/indeks/{}/0{}/{}/{}'''.format(year, month, day, category)
-        else:
-            if day <= 9:
-                iUrl = '''https://www.tempo.co/indeks/{}/{}/0{}/{}'''.format(year, month, day, category)
-            else:
-                iUrl = '''https://www.tempo.co/indeks/{}/{}/{}/{}'''.format(year, month, day, category)
 
-        print(iUrl)
-        iResponse = requests.get(iUrl).text
-        iSoup = BeautifulSoup(iResponse, "html5lib")
-        iContents = iSoup.select('.list.list-type-1 > ul > li')
-
-        for i in range(len(iContents)):
-            tempUrl = iContents[i].select_one('a')['href']
-            iTitle = iContents[i].select_one('.title').text
-            iDate = iUrl.split('/')[6] + '-' + iUrl.split('/')[5] + '-' + iUrl.split('/')[4]
-
+        for temp in data:
+        
             iJson = {
-                'category': nameCategory,
-                'title': iTitle,
+                'category': '',
+                'title': temp['title'],
                 'description': '',
-                'url': tempUrl,
+                'url': temp['url'],
                 'content': '',
                 'contentHTML': '',
                 'img': '',
                 'subCategory': '',
-                'publishedAt': iDate,
-                'source': 'tempo.co',
+                'publishedAt': temp['date'],
+                'source': temp['sumber'],
                 'cleanContent': '',
                 'nerContent': '',
                 'countNer': {
@@ -302,12 +312,4 @@ class tempoScrapper():
         iData = self.cleanContent(iData)
 
         return iData
-
-    ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara bulanan
-    def iMonthly(self, category=None, nameCategory=None, year=None, month=None):
-        iData = self.tempoMonthly(category, nameCategory, year, month)
-        iData = self.getContent2((iData))
-        iData = self.cleanData(iData)
-        iData = self.cleanContent(iData)
-
-        return iData
+        
