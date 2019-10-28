@@ -25,7 +25,7 @@ stopwords = requests.get("https://raw.githubusercontent.com/masdevid/ID-Stopword
 
 
 ## Class Scraper Tempo.co
-class tempoScrapper():
+class tempoRSS():
     def __init__(self):
         self.day = now.day
         self.month = now.month
@@ -259,7 +259,7 @@ class tempoScrapper():
             link = item.select_one('link').text
             title = item.select_one('title').text
             date = "{}-{}-{}".format(self.day, self.month, self.year)
-            print(link)
+            # print(link)
             json = {
                 'url': link,
                 'title': title,
@@ -305,8 +305,9 @@ class tempoScrapper():
         return iData
 
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara harian
-    def iDaily(self, category=None, nameCategory=None, year=None, month=None, day=None):
-        iData = self.tempoDaily(category, nameCategory, year, month, day)
+    def iRss(self):
+        iData = self.getTempoRSS()
+        iData = self.getTempo(iData)
         iData = self.getContent2((iData))
         iData = self.cleanData(iData)
         iData = self.cleanContent(iData)

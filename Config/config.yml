@@ -12,4 +12,6 @@ database :
     collection : 'iData'
     entity : 'topEntity'
     counter: 'iCounter'
+    before : 'iBefore'
+    after  : 'iAfter'
     port : 27017

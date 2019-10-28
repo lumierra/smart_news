@@ -183,3 +183,34 @@ class Database():
         })
 
         return iQuery
+
+    ## fungsi ini digunakan untuk menghapus rss tempo di collection iBefore
+    def deleteRssBefore(self, database=None, collection=None, source=None, day=None, month=None, year=None):
+        myClient = pymongo.MongoClient("mongodb://{}:{}".format(self.host, self.port))
+        myDB = myClient["{}".format(database)]
+        myCollection = myDB["{}".format(collection)]
+
+        if self.month <= 9:
+            if self.day <= 9:
+                iQuery = myCollection.remove({
+                    'publishedAt': '0{}-0{}-{}'.format(self.day, self.month, self.year),
+                    'source' : source
+                })
+            else:
+                iQuery = myCollection.remove({
+                    'publishedAt': '{}-0{}-{}'.format(self.day, self.month, self.year),
+                    'source': source
+                })
+        else:
+            if self.day <= 9:
+                iQuery = myCollection.remove({
+                    'publishedAt': '0{}-{}-{}'.format(self.day, self.month, self.year),
+                    'source': source
+                })
+            else:
+                iQuery = myCollection.remove({
+                    'publishedAt': '{}-{}-{}'.format(self.day, self.month, self.year),
+                    'source': source
+                })
+
+        return iQuery
