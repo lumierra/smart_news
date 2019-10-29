@@ -233,7 +233,7 @@ class kompasScraper():
     def cleanContent(self, iData=None):
         for i in tqdm(range(len(iData)), desc='Clean Content'):
             iStopword = []
-            iData[i]['cleanContent'] = preprocess_text(iData[i]['content'], lowercase=True, fix_unicode=True,no_punct=True)
+            iData[i]['cleanContent'] = preprocess_text(iData[i]['content'], lowercase=True, fix_unicode=True,no_punct=True,no_numbers=True)
             cleanContent = iData[i]['cleanContent'].split()
 
             [iStopword.append(cc) for cc in cleanContent if cc not in stopwords]

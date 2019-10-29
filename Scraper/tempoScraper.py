@@ -224,7 +224,7 @@ class tempoScrapper():
     def cleanContent(self, iData=None):
         for i in tqdm(range(len(iData)), desc='Clean Content'):
             text_stopword = []
-            iData[i]['cleanContent'] = preprocess_text(iData[i]['content'], lowercase=True, fix_unicode=True,no_punct=True)
+            iData[i]['cleanContent'] = preprocess_text(iData[i]['content'], lowercase=True, fix_unicode=True,no_punct=True,no_numbers=True)
             clean_content = iData[i]['cleanContent'].split()
 
             [text_stopword.append(cc) for cc in clean_content if cc not in stopwords]
