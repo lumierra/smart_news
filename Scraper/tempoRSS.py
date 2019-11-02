@@ -258,7 +258,17 @@ class tempoRSS():
         for item in iTems:
             link = item.select_one('link').text
             title = item.select_one('title').text
-            date = "{}-{}-{}".format(self.day, self.month, self.year)
+            if self.month <= 9:
+                if self.day <= 9:
+                    date = "0{}-0{}-{}".format(self.day, self.month, self.year)
+                else:
+                    date = "{}-0{}-{}".format(self.day, self.month, self.year)
+            else:
+                if self.day <= 9:
+                    date = "0{}-{}-{}".format(self.day, self.month, self.year)
+                else:
+                    date = "{}-{}-{}".format(self.day, self.month, self.year)
+
             # print(link)
             json = {
                 'url': link,
