@@ -262,24 +262,19 @@ class kompasToday():
             url = '''https://indeks.kompas.com/?site=all&date={}-{}-{}'''.format(self.year, self.month,self.day)
             iResponse = requests.get(url).text
             iSoup = BeautifulSoup(iResponse, "html5lib")
+            contents = iSoup.select('.article__list.clearfix')
             print(url)
 
-            for content in contents:
+            for content in tqdm(contents):
                 try:
-                    if category == 'money':
-                        iCategory = content.select_one('.terkini__subtitle').text.strip()
-                        realUrl = content.select_one('.terkini__img > a')['href']
-                        iTitle = content.select_one('.terkini__title').text.strip()
-                        iDate = realUrl.split('/')[6] + '-' + realUrl.split('/')[5] + '-' + realUrl.split('/')[4]
-                    else:
-                        iCategory = content.select_one('.article__subtitle').text.strip()
-                        realUrl = content.select_one('.article__link')['href']
-                        iTitle = content.select_one('.article__link').text.strip()
-                        iDate = content.select_one('.article__date').text.replace(',', '').split()[0]
-                        iDate = datetime.datetime.strptime(iDate, "%d/%m/%Y").strftime("%d-%m-%Y")
+                    iCategory = content.select_one('.article__subtitle').text.strip()
+                    realUrl = content.select_one('.article__link')['href']
+                    iTitle = content.select_one('.article__link').text.strip()
+                    iDate = content.select_one('.article__date').text.replace(',', '').split()[0]
+                    iDate = datetime.datetime.strptime(iDate, "%d/%m/%Y").strftime("%d-%m-%Y")
 
                     iJson = {
-                        "category": "",
+                        "category": '',
                         "title": iTitle,
                         "description": '',
                         "url": realUrl,
@@ -312,29 +307,22 @@ class kompasToday():
             totalPage = int(countPage[len(countPage) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
             for y in range(totalPage):
                 try:
-                    url = '''https://{}.kompas.com/search/{}-{}-{}/{}'''.format(category, year, month, day, y + 1)
+                    url = '''https://indeks.kompas.com/?site=all&date={}-{}-{}&page={}'''.format(self.year, self.month,self.day, y+1)
                     iResponse = requests.get(url).text
                     iSoup = BeautifulSoup(iResponse, "html5lib")
-                    if category == 'money': contents = iSoup.select('.terkini__post')
-                    else: contents = iSoup.select('.article__list.clearfix')
-                    print(url)
+                    contents = iSoup.select('.article__list.clearfix')
+                    # print(url)
 
-                    for content in contents:
+                    for content in tqdm(contents):
                         try:
-                            if category == 'money':
-                                iCategory = content.select_one('.terkini__subtitle').text.strip()
-                                realUrl = content.select_one('.terkini__img > a')['href']
-                                iTitle = content.select_one('.terkini__title').text.strip()
-                                iDate = realUrl.split('/')[6] + '-' + realUrl.split('/')[5] + '-' + realUrl.split('/')[4]
-                            else:
-                                iCategory = content.select_one('.article__subtitle').text.strip()
-                                realUrl = content.select_one('.article__link')['href']
-                                iTitle = content.select_one('.article__link').text.strip()
-                                iDate = content.select_one('.article__date').text.replace(',', '').split()[0]
-                                iDate = datetime.datetime.strptime(iDate, "%d/%m/%Y").strftime("%d-%m-%Y")
+                            iCategory = content.select_one('.article__subtitle').text.strip()
+                            realUrl = content.select_one('.article__link')['href']
+                            iTitle = content.select_one('.article__link').text.strip()
+                            iDate = content.select_one('.article__date').text.replace(',', '').split()[0]
+                            iDate = datetime.datetime.strptime(iDate, "%d/%m/%Y").strftime("%d-%m-%Y")
 
                             iJson = {
-                                "category": nameCategory,
+                                "category": '',
                                 "title": iTitle,
                                 "description": '',
                                 "url": realUrl,
@@ -367,9 +355,9 @@ class kompasToday():
         return iData
 
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara perhari
-    def iDaily(self, category=None, nameCategory=None, year=None, month=None, day=None):
-        iData = self.kompasDaily(category, nameCategory, year, month, day)
-        iData = self.getContent2(iData)
-        iData = self.cleanData(iData)
-        iData = self.cleanContent(iData)
+    def iDaily(self):
+        iData = self.kompasDaily()
+        # iData = self.getContent2(iData)
+        # iData = self.cleanData(iData)
+        # iData = self.cleanContent(iData)
         return iData
