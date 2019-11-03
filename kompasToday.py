@@ -30,22 +30,20 @@ class Kompas():
         self.month = now.month
         self.year = now.year
 
-    def DailyRSS(self):
+    def kompasToday(self):
 
-        DB.deleteRssBefore(self.database, 'temp', self.iSource, self.day, self.month, self.year)
+        DB.deleteRssBefore(self.database, self.before, self.iSource, self.day, self.month, self.year)
         iData = kompasToday.iDaily()
         iAttr = []
-        for i in range(len(iData)):
-            iAttr.append(iData[i])
+        for i in range(len(iData)): iAttr.append(iData[i])
 
-        DB.insertData(self.database, 'temp', iAttr)
+        DB.insertData(self.database, self.before, iAttr)
 
-        # iQuery = tempoToday.getNER(self.database, 'temp', self.iSource)
-        # iData = []
-        # for q in iQuery:
-        #     iData.append(q)
-        # DB.delete_dataDaily(self.database, 'temp', self.iSource)
-        # DB.insertData(self.database, 'temp', iData)
+        iQuery = kompasToday.getNER(self.database, self.before, self.iSource)
+        iData = []
+        for q in iQuery: iData.append(q)
+        DB.deleteRssBefore(self.database, self.before, self.iSource, self.day, self.month, self.year)
+        DB.insertData(self.database, self.before, iData)
 
 iProgram = Kompas()
-iProgram.DailyRSS()
+iProgram.kompasToday()

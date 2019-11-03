@@ -265,7 +265,7 @@ class kompasToday():
             contents = iSoup.select('.article__list.clearfix')
             print(url)
 
-            for content in tqdm(contents):
+            for content in contents:
                 try:
                     iCategory = content.select_one('.article__subtitle').text.strip()
                     realUrl = content.select_one('.article__link')['href']
@@ -301,9 +301,6 @@ class kompasToday():
                 except:
                     pass
         else:
-            
-            # if category == 'news': totalPage = 3
-            # else: totalPage = int(countPage[len(countPage) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
             totalPage = int(countPage[len(countPage) - 1].select('.paging__link')[0]['data-ci-pagination-page'])
             for y in range(totalPage):
                 try:
@@ -313,7 +310,7 @@ class kompasToday():
                     contents = iSoup.select('.article__list.clearfix')
                     # print(url)
 
-                    for content in tqdm(contents):
+                    for content in contents:
                         try:
                             iCategory = content.select_one('.article__subtitle').text.strip()
                             realUrl = content.select_one('.article__link')['href']
@@ -357,7 +354,7 @@ class kompasToday():
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara perhari
     def iDaily(self):
         iData = self.kompasDaily()
-        # iData = self.getContent2(iData)
-        # iData = self.cleanData(iData)
-        # iData = self.cleanContent(iData)
+        iData = self.getContent2(iData)
+        iData = self.cleanData(iData)
+        iData = self.cleanContent(iData)
         return iData
