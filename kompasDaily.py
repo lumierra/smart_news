@@ -28,7 +28,7 @@ class Kompas():
         self.iSource = 'kompas.com'
         self.config = config
         self.day = now.day
-        self.month = now.month
+        self.month = 10
         self.year = now.year
 
     def kompasDaily(self):
@@ -61,11 +61,11 @@ class Kompas():
 
     def kompasMonthly(self):
         try:
-            for d in range(15,18):
+            for d in range(28,31):
             
                 ## list category and name category from Tempo.co
-                list_category_kompas = ['news', 'money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
-                list_name_category_kompas = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+                list_category_kompas = ['money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
+                list_name_category_kompas = ['bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
                 # list_category_kompas = ['money', 'olahraga', 'entertainment', 'tekno', 'otomotif', 'lifestyle']
                 # list_name_category_kompas = ['bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
@@ -93,5 +93,5 @@ class Kompas():
     
     
 iProgram = Kompas()
-iProgram.kompasDaily()
-# iProgram.kompasMonthly()
+# iProgram.kompasDaily()
+iProgram.kompasMonthly()
