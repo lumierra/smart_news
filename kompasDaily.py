@@ -28,7 +28,7 @@ class Kompas():
         self.iSource = 'kompas.com'
         self.config = config
         self.day = now.day
-        self.month = 10
+        self.month = now.month
         self.year = now.year
 
     def kompasDaily(self):
@@ -93,5 +93,5 @@ class Kompas():
     
     
 iProgram = Kompas()
-# iProgram.kompasDaily()
-iProgram.kompasMonthly()
+iProgram.kompasDaily()
+# iProgram.kompasMonthly()

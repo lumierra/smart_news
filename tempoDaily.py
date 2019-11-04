@@ -28,7 +28,7 @@ class Tempo():
         self.iSource = 'tempo.co'
         self.config = config
         self.day = now.day
-        self.month = 10
+        self.month = now.month
         self.year = now.year
 
     def tempoDaily(self):
@@ -99,5 +99,5 @@ class Tempo():
   
 
 iProgram = Tempo()
-# iProgram.tempoDaily()
-iProgram.tempoMonthly()
+iProgram.tempoDaily()
+# iProgram.tempoMonthly()
