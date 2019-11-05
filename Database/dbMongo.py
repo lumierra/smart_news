@@ -214,3 +214,37 @@ class Database():
                 })
 
         return iQuery
+
+    ## fungsi untuk menginput/menginsert data ke mongoDB
+    def singleInsert(self, database=None, collection=None, attr=None):
+        myClient = pymongo.MongoClient("mongodb://{}:{}".format(self.host, self.port))
+        myDB = myClient["{}".format(database)]
+        myCollection = myDB["{}".format(collection)]
+
+        try:
+            myCollection.insert(attr)
+            print('Insert Data into MongoDB Successfully')
+        except:
+            print('Insert Data into Mongod Failed')
+
+    ## fungsi ini digunakan untuk mengambil data
+    def getDataset(self, database=None, collection=None, category=None):
+        myClient = pymongo.MongoClient("mongodb://{}:{}".format(self.host, self.port))
+        myDB = myClient["{}".format(database)]
+        myCollection = myDB["{}".format(collection)]
+
+        iData = []
+        iQuery = collection.find(
+            {"category": "{}".format(category)}, 
+            {
+                "category": 1, 
+                "title": 1,
+                "url": 1,
+                "cleanContent": 1
+            })
+        
+        for query in iQuery: iData.append(query)
+            
+        return iData
+    
+    
