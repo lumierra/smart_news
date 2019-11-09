@@ -180,7 +180,7 @@ class tempoScrapper():
         iSoup = BeautifulSoup(iResponse, "html5lib")
 
 
-        subCategory = iSoup.select('.breadcrumbs > li')[2].text
+        subCategory = iSoup.select('.breadcrumbs > li')[1].text
         img = iSoup.select_one('figure > a')['href']
 
         iContents = iSoup.select('#isi > p')
