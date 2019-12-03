@@ -1,4 +1,5 @@
 from Scraper.tempoToday import tempoToday
+from Scraper.test import tempoBefore
 from Database.dbMongo import Database
 import datetime
 import yaml
@@ -10,6 +11,7 @@ config = yaml.load(open(filename_config, "r"))
 
 ## memanggil class tempoScrapper dan class Database
 tempoToday = tempoToday()
+tempoBefore = tempoBefore()
 DB = Database()
 
 ##set datetime
@@ -30,20 +32,14 @@ class Tempo():
         self.month = now.month
         self.year = now.year
 
-    def tempoToday(self):
+    def tempoBefore(self):
 
         DB.deleteRssBefore(self.database, self.before, self.iSource, self.day, self.month, self.year)
-        iData = tempoToday.iDaily()
+        iData = tempoBefore.tempoDaily()
         iAttr = []
         for i in range(len(iData)): iAttr.append(iData[i])
 
         DB.insertData(self.database, self.before, iAttr)
 
-        iQuery = tempoToday.getNER(self.database, self.before, self.iSource)
-        iData = []
-        for q in iQuery: iData.append(q)
-        DB.deleteRssBefore(self.database, self.before, self.iSource, self.day, self.month, self.year)
-        DB.insertData(self.database, self.before, iData)
-
 iProgram = Tempo()
-iProgram.tempoToday()
+iProgram.tempoBefore()

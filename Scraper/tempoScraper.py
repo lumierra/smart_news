@@ -237,9 +237,9 @@ class tempoScrapper():
 
             [text_stopword.append(cc) for cc in clean_content if cc not in stopwords]
             case_folding = ' '.join(text_stopword)
-            stemming = stemmer.stem(case_folding)
+            # stemming = stemmer.stem(case_folding)
 
-            iData[i]['cleanContent'] = stemming
+            iData[i]['cleanContent'] = case_folding
 
         return iData
 
