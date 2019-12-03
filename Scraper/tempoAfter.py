@@ -29,6 +29,8 @@ class tempoAfter():
         self.day = now.day
         self.month = now.month
         self.year = now.year
+        self.database = 'iStorage'
+        self.collection = 'iBefore'
 
     ## fungsi untuk mendapatkan NER (Named Entity Recogtion) pada Artikel Berita
     def nerMonthly(self, database=None, collection=None, source=None, day=None, month=None, year=None):
@@ -250,7 +252,7 @@ class tempoAfter():
     def tempoDaily(self):
 
         iData = []
-        data = DB.getDataBefore()
+        data = DB.getDataBefore(self.database, self.collection)
 
         for d in data:
             iJson = {
