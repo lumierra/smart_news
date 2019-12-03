@@ -250,38 +250,20 @@ class tempoAfter():
     def tempoDaily(self):
 
         iData = []
-        if self.month <= 9:
-            if self.day <= 9:
-                iUrl = '''https://www.tempo.co/indeks/{}/0{}/0{}'''.format(self.year, self.month, self.day)
-            else:
-                iUrl = '''https://www.tempo.co/indeks/{}/0{}/{}'''.format(self.year, self.month, self.day)
-        else:
-            if self.day <= 9:
-                iUrl = '''https://www.tempo.co/indeks/{}/{}/0{}'''.format(self.year, self.month, self.day)
-            else:
-                iUrl = '''https://www.tempo.co/indeks/{}/{}/{}'''.format(self.year, self.month, self.day)
+        data = DB.getDataBefore()
 
-        print(iUrl)
-        iResponse = requests.get(iUrl).text
-        iSoup = BeautifulSoup(iResponse, "html5lib")
-        iContents = iSoup.select('.list.list-type-1 > ul > li')
-
-        for i in range(len(iContents)):
-            tempUrl = iContents[i].select_one('a')['href']
-            iTitle = iContents[i].select_one('.title').text
-            iDate = iUrl.split('/')[6] + '-' + iUrl.split('/')[5] + '-' + iUrl.split('/')[4]
-
+        for d in data:
             iJson = {
                 'category': '',
-                'title': iTitle,
+                'title': d['title'],
                 'description': '',
-                'url': tempUrl,
+                'url': d['url'],
                 'content': '',
                 'contentHTML': '',
                 'img': '',
                 'subCategory': '',
-                'publishedAt': iDate,
-                'source': 'tempo.co',
+                'publishedAt': d['publishedAt'],
+                'source': d['source'],
                 'cleanContent': '',
                 'nerContent': '',
                 'countNer': {
@@ -291,10 +273,8 @@ class tempoAfter():
                     'event': 0,
                     'merk': 0,
                     'product': 0
-                },
-                'status' : 'no'
+                }
             }
-
             iData.append(iJson)
 
         return iData

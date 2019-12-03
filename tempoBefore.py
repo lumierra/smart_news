@@ -1,4 +1,3 @@
-from Scraper.tempoToday import tempoToday
 from Scraper.test import tempoBefore
 from Database.dbMongo import Database
 import datetime
@@ -10,7 +9,6 @@ filename_config = os.path.abspath("Config/config.yml")
 config = yaml.load(open(filename_config, "r"))
 
 ## memanggil class tempoScrapper dan class Database
-tempoToday = tempoToday()
 tempoBefore = tempoBefore()
 DB = Database()
 

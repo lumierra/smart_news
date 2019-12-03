@@ -18,6 +18,7 @@ class Database():
         self.host = config['database']['mongo']['host']
         self.database = config['database']['mongo']['database']
         self.collection = config['database']['mongo']['collection']
+        self.before = config['database']['mongo']['before']
         self.port = config['database']['mongo']['port']
         self.config = config
         self.day = now.day
@@ -248,15 +249,15 @@ class Database():
         return iData
     
     ## fungsi ini digunakan untuk mengambil data di collection iBefore
-    def getDataBefore(self, database=None, collection=None):
+    def getDataBefore(self):
         myClient = pymongo.MongoClient("mongodb://{}:{}".format(self.host, self.port))
-        myDB = myClient["{}".format(database)]
-        myCollection = myDB["{}".format(collection)]
+        myDB = myClient["{}".format(self.database)]
+        myCollection = myDB["{}".format(self.before)]
 
         iData = []
-        iQuery = collection.find({
-            'publishedAt' : '{}-{}-{}'.format(self.day, self.month, self.year)
-        })
+        iQuery = myCollection.find({
+            "publishedAt" : "{}-{}-{}".format(self.day, self.month, self.year)
+        }).limit(2)
 
         for query in iQuery: iData.append(query)
 

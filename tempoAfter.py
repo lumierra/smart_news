@@ -1,5 +1,4 @@
-from Scraper.tempoBefore import tempoBefore
-from Scraper.test import tempoBefore
+from Scraper.tempoAfter import tempoAfter
 from Database.dbMongo import Database
 import datetime
 import yaml
@@ -9,9 +8,8 @@ import os
 filename_config = os.path.abspath("Config/config.yml")
 config = yaml.load(open(filename_config, "r"))
 
-## memanggil class tempoScrapper dan class Database
-tempoToday = tempoToday()
-tempoBefore = tempoBefore()
+## memanggil class tempoAfter dan class Database
+tempoAfter = tempoAfter()
 DB = Database()
 
 ##set datetime
@@ -24,7 +22,7 @@ class Tempo():
         self.host = config['database']['mongo']['host']
         self.database = config['database']['mongo']['database']
         self.collection = config['database']['mongo']['collection']
-        self.before = config['database']['mongo']['before']
+        self.after = config['database']['mongo']['after']
         self.port = config['database']['mongo']['port']
         self.iSource = 'tempo.co'
         self.config = config
@@ -32,14 +30,14 @@ class Tempo():
         self.month = now.month
         self.year = now.year
 
-    def tempoBefore(self):
+    def tempoAfter(self):
 
-        DB.deleteRssBefore(self.database, self.before, self.iSource, self.day, self.month, self.year)
-        iData = tempoBefore.tempoDaily()
+        DB.deleteRssBefore(self.database, self.after, self.iSource, self.day, self.month, self.year)
+        iData = tempoAfter.iDaily()
         iAttr = []
         for i in range(len(iData)): iAttr.append(iData[i])
 
-        DB.insertData(self.database, self.before, iAttr)
+        DB.insertData(self.database, self.after, iAttr)
 
 iProgram = Tempo()
-iProgram.tempoBefore()
+iProgram.tempoAfter()
