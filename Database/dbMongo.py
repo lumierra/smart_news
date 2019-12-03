@@ -247,4 +247,19 @@ class Database():
             
         return iData
     
+    ## fungsi ini digunakan untuk mengambil data di collection iBefore
+    def getDataBefore(self, database=None, collection=None):
+        myClient = pymongo.MongoClient("mongodb://{}:{}".format(self.host, self.port))
+        myDB = myClient["{}".format(database)]
+        myCollection = myDB["{}".format(collection)]
+
+        iData = []
+        iQuery = collection.find({
+            'publishedAt' : '{}-{}-{}'.format(self.day, self.month, self.year)
+        })
+
+        for query in iQuery: iData.append(query)
+
+        return iData
+
     

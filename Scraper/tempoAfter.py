@@ -24,7 +24,7 @@ stopwords = requests.get("https://raw.githubusercontent.com/masdevid/ID-Stopword
 
 
 ## Class Scraper Tempo.co
-class tempoToday():
+class tempoAfter():
     def __init__(self):
         self.day = now.day
         self.month = now.month
@@ -247,22 +247,41 @@ class tempoToday():
         return iResult
 
     ## fungsi ini digunakan untuk mengambil sumber data dari Tempo.co secara harian
-    def tempoBefore(self):
-        iData = []
-        data = DB.getDataBefore()
+    def tempoDaily(self):
 
-        for d in data:
+        iData = []
+        if self.month <= 9:
+            if self.day <= 9:
+                iUrl = '''https://www.tempo.co/indeks/{}/0{}/0{}'''.format(self.year, self.month, self.day)
+            else:
+                iUrl = '''https://www.tempo.co/indeks/{}/0{}/{}'''.format(self.year, self.month, self.day)
+        else:
+            if self.day <= 9:
+                iUrl = '''https://www.tempo.co/indeks/{}/{}/0{}'''.format(self.year, self.month, self.day)
+            else:
+                iUrl = '''https://www.tempo.co/indeks/{}/{}/{}'''.format(self.year, self.month, self.day)
+
+        print(iUrl)
+        iResponse = requests.get(iUrl).text
+        iSoup = BeautifulSoup(iResponse, "html5lib")
+        iContents = iSoup.select('.list.list-type-1 > ul > li')
+
+        for i in range(len(iContents)):
+            tempUrl = iContents[i].select_one('a')['href']
+            iTitle = iContents[i].select_one('.title').text
+            iDate = iUrl.split('/')[6] + '-' + iUrl.split('/')[5] + '-' + iUrl.split('/')[4]
+
             iJson = {
                 'category': '',
-                'title': d['title'],
+                'title': iTitle,
                 'description': '',
-                'url': d['url'],
+                'url': tempUrl,
                 'content': '',
                 'contentHTML': '',
                 'img': '',
                 'subCategory': '',
-                'publishedAt': d['publishedAt'],
-                'source': d['source'],
+                'publishedAt': iDate,
+                'source': 'tempo.co',
                 'cleanContent': '',
                 'nerContent': '',
                 'countNer': {
@@ -272,15 +291,17 @@ class tempoToday():
                     'event': 0,
                     'merk': 0,
                     'product': 0
-                }
+                },
+                'status' : 'no'
             }
+
             iData.append(iJson)
 
         return iData
 
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara harian
     def iDaily(self):
-        iData = self.tempoBefore()
+        iData = self.tempoDaily()
         iData = self.getContent2((iData))
         iData = self.cleanData(iData)
         iData = self.cleanContent(iData)
