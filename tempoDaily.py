@@ -64,17 +64,17 @@ class Tempo():
 
     def tempoMonthly(self):
         try:
-            for d in range(28,31):
+            for d in range(0,31):
             
                 ## list category and name category from Tempo.co
                 # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
                 # list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-                list_category_tempo = ['nasional', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
-                list_name_category_tempo = ['news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+                # list_category_tempo = ['nasional', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
+                # list_name_category_tempo = ['news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-                # list_category_tempo = ['gaya', 'tekno']
-                # list_name_category_tempo = ['health', 'tekno']
+                list_category_tempo = ['tekno']
+                list_name_category_tempo = ['tekno']
 
                 #delete data from mongoDB
                 DB.deleteMonthly(self.database, self.collection, self.iSource, d+1, self.month, self.year)

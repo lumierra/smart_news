@@ -1,5 +1,5 @@
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from textacy.preprocess import preprocess_text
-# from Database.dbMongo import Database
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 import id_beritagar as indo
@@ -14,12 +14,17 @@ import dbMongo
 nlp = id_aldo.load()
 nlp_ner = indo.load()
 
+# create stemmer
+factory = StemmerFactory()
+stemmer = factory.create_stemmer()
+
 ## Load Database Mongo
 DB = dbMongo.Database()
 
 ## Load Stopword For NLP
 stopwords = requests.get("https://raw.githubusercontent.com/masdevid/ID-Stopwords/master/id.stopwords.02.01.2016.txt").text.split("\n")
-
+tambahan = ['url', 'number', 'email', 'usd']
+for tambah in tambahan: stopwords.append(tambah)
 
 ## Class Scraper Tempo.co
 class tempoScrapper():
@@ -224,12 +229,17 @@ class tempoScrapper():
     def cleanContent(self, iData=None):
         for i in tqdm(range(len(iData)), desc='Clean Content'):
             text_stopword = []
-            iData[i]['cleanContent'] = preprocess_text(iData[i]['content'], lowercase=True, fix_unicode=True,no_punct=True,no_numbers=True)
+            iData[i]['cleanContent'] = preprocess_text(iData[i]['content'], 
+                                                lowercase=True, fix_unicode=True,no_punct=True,no_numbers=True,
+                                                no_urls=True, no_currency_symbols=True,no_phone_numbers=True,
+                                                no_emails=True)
             clean_content = iData[i]['cleanContent'].split()
 
             [text_stopword.append(cc) for cc in clean_content if cc not in stopwords]
+            case_folding = ' '.join(text_stopword)
+            stemming = stemmer.stem(case_folding)
 
-            iData[i]['cleanContent'] = ' '.join(text_stopword)
+            iData[i]['cleanContent'] = stemming
 
         return iData
 

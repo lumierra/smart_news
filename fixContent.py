@@ -99,7 +99,7 @@ class Content():
         # iData = []
         # categories = ['news', 'bisnis', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-        dataset = self.getData('otomotif')
+        dataset = self.getData('bisnis')
         for i in tqdm(range(len(dataset))):
             temp = self.getiData(dataset[i]['url'])
             clean = temp[0]['content']
