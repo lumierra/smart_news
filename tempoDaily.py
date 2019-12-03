@@ -36,11 +36,11 @@ class Tempo():
         # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
         # list_name_category_tempo = ['news', 'news', 'news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-        # list_category_tempo = ['nasional', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
-        # list_name_category_tempo = ['news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
+        list_category_tempo = ['nasional', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
+        list_name_category_tempo = ['news', 'news', 'bisnis', 'sports', 'sports', 'entertainment', 'tekno', 'otomotif', 'health']
 
-        list_category_tempo = ['gaya', 'seleb', 'tekno']
-        list_name_category_tempo = ['health', 'entertainment', 'tekno']
+        # list_category_tempo = ['gaya', 'seleb', 'tekno']
+        # list_name_category_tempo = ['health', 'entertainment', 'tekno']
 
         #delete data from mongoDB
         DB.delete_dataDaily(self.database, self.collection, self.iSource)
