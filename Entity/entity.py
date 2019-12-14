@@ -90,12 +90,10 @@ class Entity(object):
         data = []
         for ad in tqdm(iData, desc='Top Entity'):
             doc = nlp(ad['content'])
-            for ent in doc.ents:
-                data.append(ent.text)
+            for ent in doc.ents: data.append(ent.text)
 
         for i in range(len(data)):
-            if '\n' in data[i]:
-                data[i] = data[i].replace('\n', '')
+            if '\n' in data[i]: data[i] = data[i].replace('\n', '')
 
         return data
 
@@ -103,7 +101,14 @@ class Entity(object):
     def getCounter(self, iData):
         data = []
         for ad in iData:
-            if ad != '':
+            if ad != '': data.append(ad)
+
+        return data
+
+    def filterNer(self, iData=None):
+        data = []
+        for ad in iData:
+            if ad[0] != 'Indonesia' and ad[0] != 'Joko Widodo' and ad[0] != 'Kompas.com' and ad[0] != 'Jakarta': 
                 data.append(ad)
 
         return data
@@ -125,6 +130,7 @@ class Entity(object):
         entity = self.getCounter(entity)
         entity = Counter(entity)
         entity = entity.most_common(30)
+        entity = self.filterNer(entity)
         entity = self.setJson(entity)
 
         self.insertTopEntity(self.database, self.entity, entity)
