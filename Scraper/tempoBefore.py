@@ -49,6 +49,7 @@ class tempoBefore():
                 'url': tempUrl,
                 'publishedAt': iDate,
                 'source': 'tempo.co',
+                'status' : 'yes'
             }
 
             iData.append(iJson)

@@ -1,4 +1,4 @@
-from Scraper.test import tempoBefore
+from Scraper.tempoBefore import tempoBefore
 from Database.dbMongo import Database
 import datetime
 import yaml
