@@ -64,7 +64,7 @@ class Tempo():
 
     def tempoMonthly(self):
         try:
-            for d in range(10,13):
+            for d in range(13,17):
             
                 ## list category and name category from Tempo.co
                 # list_category_tempo = ['nasional', 'pemilu', 'pilpres', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
@@ -97,7 +97,35 @@ class Tempo():
         except:
             pass
   
+    def tempoDailyModel(self):
+        ## list category and name category from Tempo.co
+
+        # list_category_tempo = ['nasional', 'dunia', 'bisnis', 'bola', 'sport', 'seleb', 'tekno', 'otomotif', 'gaya']
+
+        list_category_tempo = ['otomotif']
+
+        #delete data from mongoDB
+        DB.delete_dataDaily(self.database, self.collection, self.iSource)
+
+        # Get Data
+        for category in list_category_tempo:
+            iData = scraperTempo.iDailyModel(category, self.year, self.month, self.day)
+            iAttr = []
+            for i in range(len(iData)):
+                iAttr.append(iData[i])
+
+            DB.insertData(self.database, self.collection, iAttr)
+        
+
+        iQuery = scraperTempo.getNER(self.database, self.collection, self.iSource)
+        iData = []
+        for q in iQuery:
+            iData.append(q)
+        DB.delete_dataDaily(self.database, self.collection, self.iSource)
+        DB.insertData(self.database, self.collection, iData)
+  
 
 iProgram = Tempo()
-iProgram.tempoDaily()
+# iProgram.tempoDaily()
 # iProgram.tempoMonthly()
+iProgram.tempoDailyModel()

@@ -1,5 +1,6 @@
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from textacy.preprocess import preprocess_text
+from sklearn.externals import joblib
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 import id_beritagar as indo
@@ -360,6 +361,72 @@ class tempoScrapper():
 
         return iData
 
+    ## tempo daily with model MNB
+    def tempoDailyModel(self, category=None, year=None, month=None, day=None):
+
+        iData = []
+        if month <= 9:
+            if day <= 9:
+                iUrl = '''https://www.tempo.co/indeks/{}/0{}/0{}/{}'''.format(year, month, day, category)
+            else:
+                iUrl = '''https://www.tempo.co/indeks/{}/0{}/{}/{}'''.format(year, month, day, category)
+        else:
+            if day <= 9:
+                iUrl = '''https://www.tempo.co/indeks/{}/{}/0{}/{}'''.format(year, month, day, category)
+            else:
+                iUrl = '''https://www.tempo.co/indeks/{}/{}/{}/{}'''.format(year, month, day, category)
+
+        print(iUrl)
+        iResponse = requests.get(iUrl).text
+        iSoup = BeautifulSoup(iResponse, "html5lib")
+        iContents = iSoup.select('.list.list-type-1 > ul > li')
+
+        for i in range(len(iContents)):
+            tempUrl = iContents[i].select_one('a')['href']
+            iTitle = iContents[i].select_one('.title').text
+            iDate = iUrl.split('/')[6] + '-' + iUrl.split('/')[5] + '-' + iUrl.split('/')[4]
+
+            iJson = {
+                'category': '',
+                'title': iTitle,
+                'description': '',
+                'url': tempUrl,
+                'content': '',
+                'contentHTML': '',
+                'img': '',
+                'subCategory': '',
+                'publishedAt': iDate,
+                'source': 'tempo.co',
+                'cleanContent': '',
+                'nerContent': '',
+                'countNer': {
+                    'person': 0,
+                    'org': 0,
+                    'gpe': 0,
+                    'event': 0,
+                    'merk': 0,
+                    'product': 0
+                }
+            }
+
+            iData.append(iJson)
+
+        return iData
+
+    ## menentukan kategori artikel berita dengan model klasifikasi
+    def getCategory(self, iData=None):
+
+        model = joblib.load('modelMNB')
+
+        for data in iData:
+            clean = preprocess_text(data['cleanContent'], lowercase=True)
+            result = model.predict([clean])
+            result = result[0]
+
+            data['category'] = result
+
+        return iData
+
     ## fungsi ini digunakan untuk menjalankan semua fungsi yang dibutuhkan untuk mengambil data artikel berita secara harian
     def iDaily(self, category=None, nameCategory=None, year=None, month=None, day=None):
         iData = self.tempoDaily(category, nameCategory, year, month, day)
@@ -375,5 +442,14 @@ class tempoScrapper():
         iData = self.getContent2((iData))
         iData = self.cleanData(iData)
         iData = self.cleanContent(iData)
+
+        return iData
+
+    def iDailyModel(self, category=None, year=None, month=None, day=None):
+        iData = self.tempoDailyModel(category, year, month, day)
+        iData = self.getContent2((iData))
+        iData = self.cleanData(iData)
+        iData = self.cleanContent(iData)
+        iData = self.getCategory(iData)
 
         return iData
