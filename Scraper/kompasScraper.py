@@ -21,6 +21,8 @@ DB = dbMongo.Database()
 
 ## Load Stopword For NLP
 stopwords = requests.get("https://raw.githubusercontent.com/masdevid/ID-Stopwords/master/id.stopwords.02.01.2016.txt").text.split("\n")
+tambahan = ['url', 'number', 'email', 'usd']
+for tambah in tambahan: stopwords.append(tambah)
 
 ## set datetime
 now = datetime.datetime.now().date()
@@ -238,7 +240,7 @@ class kompasScraper():
             cleanContent = iData[i]['cleanContent'].split()
 
             [iStopword.append(cc) for cc in cleanContent if cc not in stopwords]
-            case_folding = ' '.join(text_stopword)
+            case_folding = ' '.join(iStopword)
             # stemming = stemmer.stem(case_folding)
 
             iData[i]['cleanContent'] = case_folding
@@ -494,7 +496,7 @@ class kompasScraper():
         return iData
 
     ## model MNB
-    def kompasDaily(self, category=None, year=None, month=None, day=None):
+    def kompasDailyModel(self, category=None, year=None, month=None, day=None):
         iData = []
         iUrl = '''https://{}.kompas.com/search/{}-{}-{}'''.format(category, year, month, day)
         iResponse = requests.get(iUrl).text
@@ -530,7 +532,7 @@ class kompasScraper():
                         "url": realUrl,
                         "content": '',
                         "contentHTML": '',
-                        "img": '',nameCategory
+                        "img": '',
                         "subCategory": iCategory,
                         "publishedAt": iDate,
                         "source": 'kompas.com',
@@ -643,7 +645,7 @@ class kompasScraper():
         return iData
 
     def iDailyModel(self, category=None, year=None, month=None, day=None):
-        iData = self.kompasDaily(category, year, month, day)
+        iData = self.kompasDailyModel(category, year, month, day)
         iData = self.getContent2(iData)
         iData = self.cleanData(iData)
         iData = self.cleanContent(iData)
